@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #111;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .gallery {
+        display: flex;
+        height: 400px;
+        width: 700px;
+        gap: 4px;
+    }
+
+    .panel {
+        flex: 1;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: flex 0.6s ease;
+        background: #333;
+        border-radius: 8px;
+    }
+
+    .panel.active {
+        flex: 5;
+    }
+
+    /* texte vertical par défaut */
+    .label {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%) rotate(180deg);
+        writing-mode: vertical-rl;
+        color: white;
+        font-size: 16px;
+        font-family: sans-serif;
+        white-space: nowrap;
+        transition: opacity 0.3s ease;
+    }
+
+    /* texte horizontal quand actif */
+    .title {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        color: white;
+        font-size: 22px;
+        font-family: sans-serif;
+        opacity: 0;
+        transition: opacity 0.3s ease 0.2s;
+    }
+
+    .panel.active .label {
+        opacity: 0;
+    }
+
+    .panel.active .title {
+        opacity: 1;
+    }
+</style>
+<body>
+
+
+    <div class="gallery">
+        <div class="panel active" style="background:#c0392b" onclick="activate(this)">
+            <span class="label">Panel 1</span>
+            <span class="title">Panel 1</span>
+        </div>
+        <div class="panel" style="background:#2980b9" onclick="activate(this)">
+            <span class="label">Panel 2</span>
+            <span class="title">Panel 2</span>
+        </div>
+        <div class="panel" style="background:#27ae60" onclick="activate(this)">
+            <span class="label">Panel 3</span>
+            <span class="title">Panel 3</span>
+        </div>
+    </div>
+    
+    <script>
+        function activate(el) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+        }
+    </script>
+
+    
+</body>
+</html>
+
+
+
+
+
+ 
+
+

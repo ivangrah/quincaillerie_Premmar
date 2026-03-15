@@ -1,0 +1,321 @@
+@import url('https://fonts.google.com/share?selection.family=Poppins:wght@400;700;800');
+
+
+body {
+    padding: 20px;
+    background-color: #b4b4b4;
+    font-family: 'Poppins', sans-serif;
+        padding: 0px;
+        margin: 0px;
+        box-sizing: border-box;
+        border: none;
+}
+
+
+.container {
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    /* aligne verticalement */
+    justify-content: space-between;
+    /* pousse une en haut et une en bas */
+    border: none;
+    background-color: gainsboro;
+    height:400px ;
+    margin: 20px;
+   
+    
+   
+}
+
+.haut {
+    background: lightblue;
+    padding-bottom: 100px;
+    border-radius: 20px;
+}
+
+.bas {
+    background: lightgreen;
+}
+
+
+.skip {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4f1f6e;
+    text-shadow: 1px 1px 2px gray;
+    text-align: center;
+    border: none;
+    box-shadow: 1px 0px 1px 1px gray;
+    border-radius: 10px;
+    width: 100%;
+    margin-left: 4px;
+    animation: booler 3s linear infinite;
+    margin-top: 0px;
+    
+
+}
+
+
+.afrique {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 200px;
+    width: 200px;
+
+}
+
+
+.skip:hover {
+
+
+    color: #6e6455;
+    background-color: #683888;
+    transition: 0.5s ease-in-out;
+    transform: translateX(-2px);
+    cursor: pointer;
+
+
+
+}
+
+p {
+
+    font-size: 50px;
+
+
+}
+
+@keyframes booler {
+    from {
+        background-color: #f3a125;
+        color: #4f1f6e;
+    }
+
+    to {
+        background-color: #4f1f6e;
+        color: #f3a125;
+    }
+
+}
+
+ul{
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+
+}
+
+.align-nav{
+
+    padding: 20px;
+    animation: spacing 10s linear;
+}
+
+input{
+
+   margin-left: 550px;
+   margin-top: 20px;
+   border: none;
+   box-shadow: 1px 0px 1px 0px gray;
+   padding: 10px;
+   font-size: 20px;
+   border-radius: 10px;
+}
+
+h1{
+
+    color: rgb(53, 49, 49);
+    font-size: 5rem;
+    margin-left: 10px;
+    text-shadow: 5px 2px 2px #6e6455;
+    font-weight: bold;
+    animation: spacing 2s linear;
+}
+
+
+h2{
+
+
+    color: rgb(53, 49, 49);
+        font-size: 4rem;
+        margin-left: 10px;
+        text-shadow: 2px 2px 2px #6e6455;
+        font-style: italic;
+
+        animation: spacing 2s linear ;
+
+}
+
+a {
+    text-decoration: none;
+    color: #4f1f6e;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.3s ease-in-out;
+}
+
+a:hover {
+    color: rgb(53, 49, 49) ;
+    transform: translateY(5px);
+    font-size: 20px;
+    text-shadow: 1px 1px 1px #6e6455;
+        font-style: italic;       
+}
+
+a:focus{
+
+    font-size: 30px;
+    color: red;
+
+}
+
+
+/*  animations*/
+
+ .title {
+     position: absolute;
+     bottom: 20px;
+     left: 20px;
+color: red;
+     font-size: 22px;
+     font-family: sans-serif;
+     opacity: 0;
+     transition: opacity 0.3s ease 0.2s;
+     text-shadow: 1px 2px 2px gray;
+     font-weight: bold;
+ }
+
+ .panel.active .label {
+     opacity: 0;
+ }
+
+ .panel.active .title {
+     opacity: 1;
+ }
+
+.gallery {
+    display: flex;
+    height: 400px;
+    width: 800px;
+    gap: 5px;
+    margin-left: 80px;
+    animation: moving 2s linear;
+
+
+    
+}
+
+.panel {
+    flex: 1;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: flex 0.6s ease;
+    background: #333;
+    border-radius: 20px;
+    box-shadow: 1px 0px 1px 0px rgba(214, 201, 201, 0.774);
+    opacity: 0.9;
+   
+}
+
+.panel:hover{
+
+    cursor: pointer;
+    scale: 1.1;
+    background-color: transparent;
+    transform: translateX(-20px);
+    box-shadow: 2px 3px 3px 2px rgb(99, 94, 94);
+    transition: 0.8s;
+}
+
+.panel:focus{
+
+    cursor: pointer;
+        scale: 0.8;
+        transform: translateX(20px);
+        box-shadow: 2px 3px 3px 2px rgb(99, 94, 94);
+        transition: 1s;
+    }
+
+.panel.active {
+    flex: 6;
+    
+}
+
+/* texte vertical par défaut */
+.label {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+    writing-mode: vertical-rl;
+    color: gray;
+    font-size: 16px;
+    font-family: sans-serif;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+}
+
+  .panel.active .label {
+      opacity: 0;
+  }
+
+  .panel.active .title {
+      opacity: 1;
+  }
+
+  .image{
+
+    height: 500px;
+    width: 500px;
+    border-radius: 20px;
+
+
+  }
+
+  @keyframes spacing{
+
+    to{
+
+        opacity: 1;
+        transform: translateY(-40px);
+    }
+
+    from{
+
+        opacity: 0;
+            transform: translateY(0px);
+
+
+    }
+
+
+  }
+
+
+        @keyframes moving {
+    
+            to {
+    
+                opacity: 1;
+                transform: translateY(-100px);
+                margin-left: 0px;
+            }
+    
+            from {
+    
+                opacity: 0;
+                transform: translateY(0px);
+                margin-left: 80px;
+    
+    
+            }
+    
+    
+        }
