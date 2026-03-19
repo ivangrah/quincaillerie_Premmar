@@ -45,22 +45,22 @@
                                 <input type="search" placeholder=" recherche" >
 
                             </div>
-                            <h1>BIENVENUE DANS PREMMAR BOUTIQUES </h1>
+                            <h1>BIENVENUE SUR PREMMAR BOUTIQUES </h1>
 
-                            <h2>NOS CATHEGORIES d'ARTICLES</h2>
+                            <h2>NOS CATHEGORIES D'ARTICLES</h2>
                          
                         
 <div class="gallery">
     <div class="panel active" onclick="activate(this)" >
-        <img src="../boutique/image/electriques.jpg" alt="electricite" class="image">
+        <a href="/client/produit/electricite/index.html"><img src="../boutique/image/electriques.jpg" alt="electricite" class="image"></a>
         <span class="title">ELECTRICTE</span>
     </div>
     <div class="panel"  onclick="activate(this)" >
-     <img src="../boutique/image/serrure et securite.jpg" alt="serrure" class="image">
+     <a href="/client/produit/securite & serrure/secu.html"><img src="../boutique/image/serrure et securite.jpg" alt="serrure" class="image"></a>
         <span class="title">SERRURE ET SECURITE</span>
     </div>
     <div class="panel" onclick="activate(this)">
-        <img src="../boutique/image/outillage.jpg" alt="outillage" class="image">
+       <a href="/client/produit/outillage/outillage.html"><img src="../boutique/image/outillage.jpg" alt="outillage" class="image"></a> 
         <span class="title">OUTILLAGE</span>
     </div>
 
@@ -70,7 +70,7 @@
     </div>
 
     <div class="panel" onclick="activate(this)">
-        <img src="../boutique/image/peinture.jpg" alt="outillage" class="image">
+        <a href="/client/produit/peinture colle et produit chimique/peint.html"><img src="../boutique/image/peinture.jpg" alt="outillage" class="image"></a>
         <span class="title">PEINNTURE COLLE ET PRODUIT CHIMIQUE</span>
     </div>
     <div class="panel" onclick="activate(this)">
@@ -80,7 +80,7 @@
 
     <div class="panel" onclick="activate(this)">
         <img src="../boutique/image/cables et cordeaux.jpg" alt="outillage" class="image">
-        <span class="title">CABLES ET CORDEAUX</span>
+        <span class="title"> ROULEAUX ET CORDEAUX</span>
     </div>
 
     <div class="panel" onclick="activate(this)">
@@ -88,12 +88,9 @@
         <span class="title">SCOTCH & ADESIFS</span>
     </div>
 
-</div>
-
  </div>
-
-   </div>
-
+      </div>
+      </div>
         </nav>
         </header>
         </div>
@@ -106,6 +103,8 @@
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             el.classList.add('active');
         }
+
+        
     </script>
     
 </body>

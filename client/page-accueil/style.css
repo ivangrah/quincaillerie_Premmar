@@ -1,4 +1,4 @@
-@import url('https://fonts.google.com/share?selection.family=Poppins:wght@400;700;800');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap');
 
 
 body{
@@ -310,7 +310,7 @@ footer{
    
     transition: 1s;
 }
-z
+
 @keyframes movetext{
 
 

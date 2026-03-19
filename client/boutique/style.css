@@ -1,4 +1,4 @@
-@import url('https://fonts.google.com/share?selection.family=Poppins:wght@400;700;800');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap');
 
 
 body {
@@ -119,18 +119,19 @@ ul{
 
 input{
 
-   margin-left: 550px;
+   margin-left: 150px;
    margin-top: 20px;
    border: none;
    box-shadow: 1px 0px 1px 0px gray;
    padding: 10px;
    font-size: 20px;
    border-radius: 10px;
+   width: 80%;
 }
 
 h1{
 
-    color: rgb(53, 49, 49);
+    color: #4f1f6e;
     font-size: 5rem;
     margin-left: 10px;
     text-shadow: 5px 2px 2px #6e6455;
