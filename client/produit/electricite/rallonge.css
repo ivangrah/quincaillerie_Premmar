@@ -1,4 +1,4 @@
-@import url('https://fonts.google.com/share?selection.family=Poppins:wght@400;700;800');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap');
 
 body {
     font-family: 'Poppins', sans-serif;
@@ -69,13 +69,27 @@ ul {
 }
 
 input {
-    margin-left: 550px;
+    margin-left: 150px;
     margin-top: 20px;
     border: none;
     box-shadow: 1px 0px 1px 0px gray;
     padding: 10px;
     font-size: 20px;
     border-radius: 10px;
+    width: 80%;
+    background-color: #cccccc;
+}
+
+input:hover {
+    cursor: pointer;
+    background-color: #696767;
+    padding: 15px;
+    transition: 1s;
+    scale: 1.1s;
+
+
+
+
 }
 
 h1 {
@@ -88,13 +102,13 @@ h1 {
 }
 
 h2 {
-    color: rgb(53, 49, 49);
+    color: #683888;
     font-size: 4rem;
     text-align: center;
     text-shadow: 2px 2px 2px #6e6455;
     font-style: italic;
     animation: spacing 2s linear;
-    margin-top: 100px;
+    margin-top: 50px;
 }
 
 a {
@@ -214,9 +228,13 @@ h3 {
 
     text-align: center;
     font-size: 1.5rem;
-    font-weight: bold;
-    color: #b9b7b7;
+    font-weight: 300;
     font-style: italic;
+    color: #4f1f6e;
+    text-shadow: 1px 1px 2px gray;
+    animation: booler 2s linear infinite;
+    box-shadow: 1px 0px 1px 1px gray;
+    border-radius: 12px;
 
 }
 
@@ -225,8 +243,8 @@ h3 {
     display: block;
     align-items: center;
     justify-content: space-between;
-    padding: 50px;
-    margin-top: 20px;
+    padding: 10px;
+
 }
 
 button {
@@ -237,7 +255,10 @@ button {
     border-radius: 10px;
     background-color: #ada8a8;
     font-weight: bold;
-    color: gray;
+    color: #4f1f6e;
+    text-shadow: 1px 1px 2px gray;
+    animation: booler 2s linear infinite;
+    box-shadow: 1px 0px 1px 1px gray;
 }
 
 

@@ -19,8 +19,7 @@ const lien = [
     "rallonge.html",
     "coffret.html",
     "Eclair.html",
-    "dijonct.html",
-    
+    "dijonct.html"  
 ];
 
 let index = 0;
