@@ -143,7 +143,7 @@ h1{
 h2{
 
 
-    color: rgb(53, 49, 49);
+    color: #4f1f6e;
         font-size: 4rem;
         margin-left: 10px;
         text-shadow: 2px 2px 2px #6e6455;
@@ -313,7 +313,7 @@ color: red;
     
                 opacity: 0;
                 transform: translateY(0px);
-                margin-left: 80px;
+                margin-left: 10px;
     
     
             }
