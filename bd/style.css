@@ -1,0 +1,454 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap');
+
+
+body {
+    padding: 20px;
+    background-color: #b4b4b4;
+    font-family: 'Poppins', sans-serif;
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+    border: none;
+}
+
+
+.container {
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    /* aligne verticalement */
+    justify-content: space-between;
+    /* pousse une en haut et une en bas */
+    border: none;
+    background-color: gainsboro;
+    height: 400px;
+    margin: 20px;
+
+
+
+}
+
+.haut {
+    background: rgb(223, 229, 231);
+    padding-bottom: 100px;
+    border-radius: 20px;
+}
+
+.bas {
+    background: lightgreen;
+}
+
+
+.skip {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #441d5e;
+    text-shadow: 1px 1px 2px gray;
+    text-align: center;
+    border: none;
+    box-shadow: 1px 0px 1px 1px gray;
+    border-radius: 10px;
+    width: 100%;
+    margin-left: 4px;
+    animation: booler 3s linear infinite;
+    margin-top: 0px;
+
+
+}
+
+
+.afrique {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 200px;
+    width: 200px;
+
+}
+
+
+.skip:hover {
+
+
+    color: #6e6455;
+    background-color: #683888;
+    transition: 0.5s ease-in-out;
+    transform: translateX(-2px);
+    cursor: pointer;
+
+
+
+}
+
+p {
+
+    font-size: 50px;
+
+
+}
+
+@keyframes booler {
+    from {
+        background-color: #f3a125;
+        color: #4f1f6e;
+    }
+
+    to {
+        background-color: #4f1f6e;
+        color: #f3a125;
+    }
+
+}
+
+ul {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+
+}
+
+.align-nav {
+
+    padding: 20px;
+    animation: spacing 10s linear;
+}
+
+input {
+
+    margin-left: 150px;
+    margin-top: 20px;
+    border: none;
+    box-shadow: 1px 0px 1px 0px gray;
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 10px;
+    width: 80%;
+}
+
+h1 {
+
+    color: #431c5e;
+    font-size: 5rem;
+    margin-left: 10px;
+    text-shadow: 2px 2px 2px #473c2a;
+    font-weight: bold;
+    animation: spacing 2s linear;
+    text-align: center;
+}
+
+
+h2 {
+
+
+    color: #4f1f6e;
+    font-size: 4rem;
+    margin-left: 10px;
+    text-shadow: 2px 2px 2px #6e6455;
+    font-style: italic;
+
+    animation: spacing 2s linear;
+
+}
+
+a {
+    text-decoration: none;
+    color: #4f1f6e;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.3s ease-in-out;
+}
+
+a:hover {
+    color: rgb(53, 49, 49);
+    transform: translateY(5px);
+    font-size: 20px;
+    text-shadow: 1px 1px 1px #6e6455;
+    font-style: italic;
+}
+
+a:focus {
+
+    font-size: 30px;
+    color: red;
+
+}
+
+
+/*  animations*/
+
+.title {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: red;
+    font-size: 22px;
+    font-family: sans-serif;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.2s;
+    text-shadow: 1px 2px 2px gray;
+    font-weight: bold;
+}
+
+.panel.active .label {
+    opacity: 0;
+}
+
+.panel.active .title {
+    opacity: 1;
+}
+
+.gallery {
+    display: flex;
+    height: 400px;
+    width: 800px;
+    gap: 5px;
+    margin-left: 80px;
+    animation: moving 2s linear;
+
+
+
+}
+
+.panel {
+    flex: 1;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: flex 0.6s ease;
+    background: #333;
+    border-radius: 20px;
+    box-shadow: 1px 0px 1px 0px rgba(214, 201, 201, 0.774);
+    opacity: 0.9;
+
+}
+
+.panel:hover {
+
+    cursor: pointer;
+    scale: 1.1;
+    background-color: transparent;
+    transform: translateX(-20px);
+    box-shadow: 2px 3px 3px 2px rgb(99, 94, 94);
+    transition: 0.8s;
+}
+
+.panel:focus {
+
+    cursor: pointer;
+    scale: 0.8;
+    transform: translateX(20px);
+    box-shadow: 2px 3px 3px 2px rgb(99, 94, 94);
+    transition: 1s;
+}
+
+.panel.active {
+    flex: 6;
+
+}
+
+/* texte vertical par défaut */
+.label {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+    writing-mode: vertical-rl;
+    color: gray;
+    font-size: 16px;
+    font-family: sans-serif;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+}
+
+.panel.active .label {
+    opacity: 0;
+}
+
+.panel.active .title {
+    opacity: 1;
+}
+
+.image {
+
+    height: 500px;
+    width: 500px;
+    border-radius: 20px;
+
+
+}
+
+@keyframes spacing {
+
+    to {
+
+        opacity: 1;
+        transform: translateY(-20px);
+    }
+
+    from {
+
+        opacity: 0;
+        transform: translateY(0px);
+
+
+    }
+
+
+}
+
+
+@keyframes moving {
+
+    to {
+
+        opacity: 1;
+        transform: translateY(-30px);
+        margin-left: 0px;
+    }
+
+    from {
+
+        opacity: 0;
+        transform: translateY(0px);
+        margin-left: 10px;
+
+
+    }
+
+
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+/* Tablette */
+@media screen and (max-width: 1024px) {
+
+    .gallery {
+        width: 100%;
+        height: 300px;
+        margin-left: 0;
+    }
+
+    .container {
+        height: auto;
+    }
+
+    h1 {
+        font-size: 3rem;
+        margin-top: 30px;
+    }
+
+    h2 {
+        font-size: 2.5rem;
+    }
+
+    ul {
+        gap: 40px;
+        flex-wrap: wrap;
+    }
+
+    input {
+        margin-left: 0;
+        width: 80%;
+        margin-left: 30px;
+
+    }
+}
+
+/* Mobile */
+@media screen and (max-width: 768px) {
+
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        margin: 10px;
+    }
+
+    .gallery {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .panel {
+        width: 100%;
+        height: 200px;
+    }
+
+    .panel.active {
+        flex: unset;
+        height: 300px;
+    }
+
+    .label {
+        writing-mode: horizontal-tb;
+        transform: translateX(-50%);
+        font-size: 14px;
+    }
+
+    .title {
+        font-size: 16px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    p {
+        font-size: 20px;
+    }
+
+    ul {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .skip {
+        font-size: 14px;
+    }
+
+    input {
+        font-size: 16px;
+        padding: 8px;
+    }
+}
+
+
+/* Petit mobile */
+@media screen and (max-width: 480px) {
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    .gallery {
+        gap: 10px;
+    }
+
+    .panel {
+        height: 150px;
+    }
+
+    .panel.active {
+        height: 250px;
+    }
+
+    .skip {
+        padding: 10px;
+    }
+}
