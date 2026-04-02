@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cathegories</title>
+    <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+</head>
+<body>
+
+    
+    <section class="container">
+
+        <div class="haut">
+
+            <header>
+                <nav>
+                    <div class="align-nav">
+                        <div class="skip">
+            
+                            <img src="/bd/catheimage/logo0.png" class="afrique" alt="afrique">
+                            <p> PREMMAR BOUTIQUES</p><br><br>
+            
+            
+                        </div>
+            
+                     
+                    </div>
+                </nav>
+
+                <nav>
+                    <div class="align-nav">
+                       <ul>
+                        <li><a href="../page-accueil/index.html">Accueil</a></li>
+                        <li><a href="../boutique/index.html">Cathegories</a></li>
+                        <li><a href="../page-accueil/index.html">Produit</a></li>
+                        <li><a href="../page-accueil/index.html">Nos Prestations</a></li>
+                       </ul>
+                        </div>
+                        <div class="block">
+                            <div class="serach">
+
+                                <input type="search" placeholder=" recherche" >
+
+                            </div>
+                            <h1>BIENVENUE SUR PREMMAR BOUTIQUES </h1>
+
+                            <h2>NOS CATHEGORIES D'ARTICLES</h2>
+                         
+                        
+<div class="gallery">
+    <div class="panel active" onclick="activate(this)" >
+        <a href="/client/produit/electricite/index.html"><img src="../boutique/image/electriques.jpg" alt="electricite" class="image"></a>
+        <span class="title">ELECTRICTE</span>
+    </div>
+    <div class="panel"  onclick="activate(this)" >
+     <a href="/client/produit/securite & serrure/secu.html"><img src="../boutique/image/serrure et securite.jpg" alt="serrure" class="image"></a>
+        <span class="title">SERRURE ET SECURITE</span>
+    </div>
+    <div class="panel" onclick="activate(this)">
+       <a href="/client/produit/outillage/outillage.html"><img src="../boutique/image/outillage.jpg" alt="outillage" class="image"></a> 
+        <span class="title">OUTILLAGE</span>
+    </div>
+
+    <div class="panel" onclick="activate(this)">
+        <img src="../boutique/image/flexible-connector-different-wrenches.jpg" alt="outillage" class="image">
+        <span class="title">PLOMBERIE</span>
+    </div>
+
+    <div class="panel" onclick="activate(this)">
+        <a href="/client/produit/peinture colle et produit chimique/peint.html"><img src="../boutique/image/peinture.jpg" alt="outillage" class="image"></a>
+        <span class="title">PEINNTURE COLLE ET PRODUIT CHIMIQUE</span>
+    </div>
+    <div class="panel" onclick="activate(this)">
+        <a href="/client/produit/visserie fixation & attaches/index.html"><img src="../boutique/image/28980.jpg" alt="outillage" class="image"></a>
+        <span class="title">VISSERIE FIXATION ET ATTACHES</span>
+    </div>
+
+    <div class="panel" onclick="activate(this)">
+        <a href="/client/produit/cordeau et rouleaux/cabc.html"><img src="../boutique/image/cables et cordeaux.jpg" alt="outillage" class="image"></a>
+        <span class="title"> ROULEAUX ET CORDEAUX</span>
+    </div>
+
+    <div class="panel" onclick="activate(this)">
+        <a href="/client/produit/scotch & adhesifs/scotch/index.html"><img src="../boutique/image/2204.i203.001.P.m004.c33.fp duct tape mockup realistic set.jpg" alt="outillage"class="image"></a>
+        <span class="title">SCOTCH & ADESIFS</span>
+    </div>
+
+ </div>
+      </div>
+      </div>
+        </nav>
+        </header>
+        </div>
+        <div class="bas"></div>
+    </section>
+
+
+    <script>
+        function activate(el) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        
+    </script>
+    
+</body>
+</html>
