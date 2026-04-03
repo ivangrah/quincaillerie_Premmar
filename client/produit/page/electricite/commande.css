@@ -1,0 +1,348 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+* {
+
+
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+
+}
+
+form{
+
+    background-color: #eeebeb;
+    padding: 30px;
+    border: none;
+    width: 90%;
+    margin: 30px 70px;
+    padding-bottom: 200px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+}
+
+.gr-gauche{
+
+    display: block;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    gap: 20px;
+    width: 50% ;
+    border: none;
+    padding: 20px 30px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin-top: 100px;
+
+
+}
+
+.align-vertical-input-client{
+
+    display: flex;
+    flex-direction: column;
+   
+}
+
+.align-vertical-input-adresse {
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+.align-vertical-input-paiement {
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+
+.flex-input{
+
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px;
+
+    
+    
+}
+
+h4{
+
+    color: orange;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 10px;
+}
+
+label{
+
+    color: purple;
+        font-size: 1rem;
+        font-weight: bold;
+        text-shadow: 1px 0px 1px rgb(193, 193, 193);
+}
+
+input{
+
+    padding: 10px 50px;
+    margin: 5px 0px;
+    border-radius:2px ;
+    border: none;
+        box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.12);
+        
+
+
+}
+
+input:hover{
+
+padding: 12px 55px;
+transition: 0.3s ease;
+scale: 1.03;
+background-color: #e6e5e5;
+font-size: 16px;
+
+
+}
+
+
+select{
+   background-color: #e6e5e5;
+    padding: 5px;
+    color: gray;
+    border: none;
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.12);
+ 
+    border-radius: 2px;
+}
+
+
+/* gr droite*/
+
+
+/* ───────── DROITE : RÉSUMÉ COMMANDE ───────── */
+
+.gr-droite {
+
+    display: flex;
+    flex-direction: column;
+
+    width: 50%;
+
+    padding: 25px 30px;
+
+    background-color: #fff;
+
+    border-radius: 10px;
+
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+
+    margin-top: 100px;
+
+}
+
+/* contenu résumé */
+
+.conten {
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 15px;
+
+}
+
+/* lignes prix */
+
+.ligne {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    font-size: 15px;
+
+    color: #444;
+
+}
+
+/* séparation */
+
+.ligne.total {
+
+    border-top: 1px solid #ddd;
+
+    padding-top: 10px;
+
+    font-weight: bold;
+
+    font-size: 17px;
+
+    color: purple;
+
+}
+
+/* ───────── IMAGE PRODUIT ───────── */
+
+.carte-image {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 10px;
+
+    border-radius: 10px;
+
+    background: #f7f7f7;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+}
+
+/* image */
+
+.carte-image img {
+
+    height: 120px;
+
+    width: 120px;
+
+    object-fit: cover;
+
+    border-radius: 10px;
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.12);
+    background-color: #b3aaaa;
+
+}
+
+img:hover {
+
+    transform: scale(1.05);
+
+    transition: 0.3s ease;
+
+    cursor: pointer;
+
+}
+
+/* texte produit */
+
+.carte-image h4 {
+
+    font-size: 16px;
+
+    color: purple;
+
+}
+
+/*  TYPES PRODUIT  */
+
+.type {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 8px 0;
+
+}
+
+/*  BOUTON COMMANDE  */
+
+.btn {
+
+    margin-top: 20px;
+
+}
+
+/* bouton corrigé */
+
+.bt {
+
+    width: 100%;
+
+    padding: 14px;
+
+    background-color: rgb(77, 14, 77);
+
+    border-radius: 8px;
+
+    border: none;
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    transition: 0.3s ease;
+
+}
+
+/* hover */
+
+.bt:hover {
+
+    cursor: pointer;
+
+    background-color: rgb(15, 5, 15);
+
+    transform: translateY(-2px);
+
+}
+
+
+.special {
+
+
+
+    background-color: #e6e5e5;
+
+    border: none;
+
+    border-radius: 2px;
+
+  
+
+    font-weight: bold;
+
+    color: #333;
+
+    transition: 0.3s ease;
+padding: 5px;
+}
+
+.special:hover {
+
+    background-color: #d4d3d3;
+
+    cursor: pointer;
+
+    transform: scale(1.1);
+
+}
+
+h1{
+
+    text-align: center;
+    color: purple;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    
+}

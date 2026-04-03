@@ -41,15 +41,15 @@
         </div>
 
         <?php
-   
+
         include_once "../../../../bd/config.php";
 
         try {
-      
+
             $connection = new PDO($dsn, $username, $password);
             $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        
+
             $sql = "SELECT p.*, sc.nom_sous_categorie 
                 FROM PRODUIT p
                 INNER JOIN SOUS_CATEGORIE sc 
@@ -82,13 +82,13 @@
                         </div>
 
                         <div class="carte-body">
-                        
+
                             <span class="carte-sous-cat">
                                 <i class="fa-solid fa-folder"></i>
                                 <?= htmlspecialchars($produit['nom_sous_categorie']) ?>
                             </span>
 
-               
+
                             <h3 class="carte-nom"><?= htmlspecialchars($produit['nom_produit']) ?></h3>
                             <p class="carte-desc"><?= htmlspecialchars($produit['description']) ?></p>
 
@@ -96,9 +96,9 @@
                                 <span class="carte-prix">
                                     <?= number_format($produit['prix'], 0, ',', ' ') ?> <small>FCFA</small>
                                 </span>
-                               
-                                <a href="detail.php?id=<?= (int)$produit['id_produit'] ?>" class="btn-voir">
-                                    <i class="fa-solid fa-shopping-cart"> Commander</i> 
+
+                                <a href="commande.php?id=<?= (int)$produit['id_produit'] ?>" class="btn-voir">
+                                    <i class="fa-solid fa-cart-shopping"></i> Commander
                                 </a>
                             </div>
                         </div>

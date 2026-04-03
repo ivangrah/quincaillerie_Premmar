@@ -47,7 +47,7 @@
                 <div class="quinque">
                     <h2>PREMMAR QUINCAILLERIE :</h2>
                     <h3>TOUS POUR LE BÂTIMENT — VENTE ET LIVRAISON DE MATÉRIELS</h3>
-                <a href="./boutique.php"><button type="submit">boutiques</button></a>
+                <a href="../../bd/cathegorie.php"><button type="submit">boutiques</button></a>
                 </div>
 
                 <footer>
