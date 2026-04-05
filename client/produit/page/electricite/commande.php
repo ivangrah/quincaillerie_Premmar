@@ -1,13 +1,21 @@
 <?php
+ob_start(); // ✅ Met tout en tampon, header() fonctionnera toujours
 
 include_once "../../../../bd/config.php";
 
-$id_produit = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+// Récupérer l'id
+$id_produit = 0;
+if (isset($_POST['id_produit'])) {
+    $id_produit = (int)$_POST['id_produit'];
+} elseif (isset($_GET['id'])) {
+    $id_produit = (int)$_GET['id'];
+}
 
 if ($id_produit === 0) {
     die("<p style='color:red'>Produit introuvable.</p>");
 }
 
+// Récupérer le produit
 try {
     $connection = new PDO($dsn, $username, $password);
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -28,10 +36,41 @@ try {
     $stmt2 = $connection->prepare($sql2);
     $stmt2->execute([':id' => $id_produit]);
     $types = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
 } catch (PDOException $error) {
     echo "<pre style='color:red'>ERREUR : " . $error->getMessage() . "</pre>";
     die();
 }
+
+// Traitement paiement
+$numeros = '2250566289394';
+$montant = $produit['prix'];
+
+if (isset($_POST['mode_paiement']) && !empty($_POST['mode_paiement'])) {
+    $mode = $_POST['mode_paiement'];
+
+    if ($mode === 'wave') {
+        $url_wave = 'https://pay.wave.com/m/M_ci_uj5MuabB7Bq-/c/ci/?amount='  . $montant . '&currency=XOF';
+        header('Location: ' . $url_wave);
+        ob_end_clean(); // vide le tampon avant de rediriger
+        exit();
+    } elseif ($mode === 'orange') {
+        $mode_paiement = 'Orange Money';
+    } elseif ($mode === 'mtn') {
+        $mode_paiement = 'MTN Money';
+    } elseif ($mode === 'moov') {
+        $mode_paiement = 'Moov Money';
+    } else {
+        $mode_paiement = 'Mode de paiement inconnu';
+    }
+} else {
+    $mode_paiement = 'Non spécifié';
+}
+
+
+
+
+https://pay.wave.com/m/M_ci_uj5MuabB7Bq-/c/ci/?amount=20000
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -52,7 +91,7 @@ try {
     <hr size="1" color="gray" width="60%" align="center" style="margin-left: 250px;">
 
 
-    <form method="POST" action="traitement.php">
+    <form method="POST" action="commande.php?id=<?= $id_produit ?>">
 
 
 
@@ -116,13 +155,15 @@ try {
                     <input type="radio" id="apres" name="paiement_apres">
 
                 </div>
-                    <div class="btn">
-                        <a href="index.php"><button class="bt" type="button">Retour</button></a>
-                    </div>
+                <div class="btn">
+                    <a href="index.php"><button class="bt" type="button">Retour</button></a>
                 </div>
             </div>
+        </div>
 
         </div>
+
+
 
 
         <div class="gr-droite">
