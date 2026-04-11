@@ -1,0 +1,363 @@
+/* ================================================================
+   PREMMAR BOUTIQUES — Pages de confirmation de commande
+   Thème : Orange & Violet
+   ================================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap");
+
+/* ── Reset ────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ── Variables globales ───────────────────────────────────────── */
+:root {
+    --font-head: "Sora", sans-serif;
+    --font-body: "DM Sans", sans-serif;
+    --radius-card: 22px;
+    --radius-box: 14px;
+    --shadow-card: 0 12px 48px rgba(90, 30, 150, .18);
+    --transition: .35s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* ================================================================
+   COULEURS PAR ÉTAT — surchargées dans le <style> de chaque page
+   ================================================================
+
+   Page "Paiement confirmé"   → .page-success
+   Page "Paiement refusé"     → .page-error
+   Page "Commande livrée"     → .page-delivery
+
+   ================================================================ */
+
+/* ── Fond de page — commun ────────────────────────────────────── */
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-body);
+    padding: 28px 16px;
+}
+
+/* ── Carte centrale ───────────────────────────────────────────── */
+.card {
+    background: #ffffff;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    max-width: 500px;
+    width: 100%;
+    padding: 50px 44px 42px;
+    text-align: center;
+    border-top: 6px solid var(--accent);
+    animation: slideUp .55s cubic-bezier(.4, 0, .2, 1) both;
+}
+
+/* ── Marque / logo texte ──────────────────────────────────────── */
+.brand {
+    font-family: var(--font-head);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 30px;
+    opacity: .75;
+}
+
+/* ── Icône ronde ──────────────────────────────────────────────── */
+.icon-wrap {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: var(--icon-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 28px;
+    animation: popIn .5s .2s cubic-bezier(.175, .885, .32, 1.275) both;
+}
+
+.icon-wrap svg {
+    width: 46px;
+    height: 46px;
+}
+
+/* ── Titre ────────────────────────────────────────────────────── */
+.card h1 {
+    font-family: var(--font-head);
+    font-size: clamp(1.4rem, 4.5vw, 1.8rem);
+    font-weight: 700;
+    color: var(--title-color);
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+/* ── Sous-titre ───────────────────────────────────────────────── */
+.card .subtitle {
+    font-size: .94rem;
+    color: #7c5cbf;
+    /* violet doux */
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+.card .subtitle strong {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* ── Bloc de détails ──────────────────────────────────────────── */
+.details {
+    background: var(--details-bg);
+    border: 2px solid var(--details-border);
+    border-radius: var(--radius-box);
+    padding: 18px 22px;
+    text-align: left;
+    margin-bottom: 32px;
+}
+
+.details-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 0;
+    font-size: .875rem;
+}
+
+.details-row+.details-row {
+    border-top: 1px solid var(--details-border);
+}
+
+.details-row .label {
+    color: #a78bca;
+    /* violet clair */
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-right: 14px;
+}
+
+.details-row .value {
+    font-weight: 700;
+    color: #3b1f6e;
+    /* violet foncé */
+    text-align: right;
+    word-break: break-all;
+}
+
+/* Montant mis en avant */
+.details-row .value.montant {
+    color: var(--accent);
+    font-size: 1.05rem;
+    letter-spacing: .01em;
+}
+
+/* ── Bouton principal ─────────────────────────────────────────── */
+.btn-retour {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: linear-gradient(135deg, var(--btn-from), var(--btn-to));
+    color: #ffffff;
+    text-decoration: none;
+    font-family: var(--font-head);
+    font-size: .9rem;
+    font-weight: 600;
+    padding: 14px 32px;
+    border-radius: 50px;
+    transition: var(--transition);
+    box-shadow: 0 5px 18px var(--btn-shadow);
+    letter-spacing: .03em;
+}
+
+.btn-retour:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 28px var(--btn-shadow);
+}
+
+.btn-retour:active {
+    transform: translateY(0) scale(.98);
+}
+
+/* ================================================================
+   THÈME : PAIEMENT CONFIRMÉ  (vert → orange → violet)
+   classe body : .page-success
+   ================================================================ */
+.page-success {
+    background: linear-gradient(135deg, #fff7ed 0%, #f3e8ff 100%);
+    --accent: #ea580c;
+    /* orange vif */
+    --title-color: #7e22ce;
+    /* violet */
+    --icon-bg: #ffedd5;
+    --details-bg: #fdf4ff;
+    --details-border: #e9d5ff;
+    --btn-from: #ea580c;
+    --btn-to: #7e22ce;
+    --btn-shadow: rgba(126, 34, 206, .35);
+}
+
+/* Anneau ripple vert sur succès */
+.page-success .icon-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid #ea580c;
+    animation: ripple 1.3s ease-out .65s both;
+}
+
+/* ================================================================
+   THÈME : PAIEMENT REFUSÉ
+   classe body : .page-error
+   ================================================================ */
+.page-error {
+    background: linear-gradient(135deg, #fff1f2 0%, #f3e8ff 100%);
+    --accent: #dc2626;
+    /* rouge-orange */
+    --title-color: #6b21a8;
+    /* violet profond */
+    --icon-bg: #fee2e2;
+    --details-bg: #fdf4ff;
+    --details-border: #e9d5ff;
+    --btn-from: #dc2626;
+    --btn-to: #7e22ce;
+    --btn-shadow: rgba(220, 38, 38, .35);
+}
+
+/* Secousse de l'icône */
+.page-error .icon-wrap {
+    animation: popIn .5s .2s cubic-bezier(.175, .885, .32, 1.275) both,
+        shake .55s .8s both;
+}
+
+/* ================================================================
+   THÈME : COMMANDE À LA LIVRAISON
+   classe body : .page-delivery
+   ================================================================ */
+.page-delivery {
+    background: linear-gradient(135deg, #fff7ed 0%, #ede9fe 100%);
+    --accent: #f97316;
+    /* orange */
+    --title-color: #5b21b6;
+    /* violet */
+    --icon-bg: #ffedd5;
+    --details-bg: #f5f3ff;
+    --details-border: #ddd6fe;
+    --btn-from: #f97316;
+    --btn-to: #7c3aed;
+    --btn-shadow: rgba(124, 58, 237, .35);
+}
+
+/* Rebond du camion */
+.page-delivery .icon-wrap svg {
+    animation: bounce 1.1s .6s ease-in-out both;
+}
+
+/* ================================================================
+   ANIMATIONS
+   ================================================================ */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(32px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(.3);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes ripple {
+    from {
+        transform: scale(1);
+        opacity: .8;
+    }
+
+    to {
+        transform: scale(1.7);
+        opacity: 0;
+    }
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-7px);
+    }
+
+    40% {
+        transform: translateX(7px);
+    }
+
+    60% {
+        transform: translateX(-4px);
+    }
+
+    80% {
+        transform: translateX(4px);
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-12px);
+    }
+
+    70% {
+        transform: translateY(-5px);
+    }
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 520px) {
+    .card {
+        padding: 36px 20px 30px;
+    }
+
+    .details-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 3px;
+    }
+
+    .details-row .value {
+        text-align: left;
+    }
+
+    .btn-retour {
+        width: 100%;
+        justify-content: center;
+    }
+}

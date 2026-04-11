@@ -1,348 +1,312 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 * {
-
-
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
-
+    font-family: 'Inter', sans-serif;
 }
 
-form{
+body {
+    background-color: #f0ecec;
+}
 
+h1 {
+    text-align: center;
+    color: purple;
+    font-size: 2.5rem;
+    margin: 30px 0 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+form {
     background-color: #eeebeb;
     padding: 30px;
     border: none;
     width: 90%;
-    margin: 30px 70px;
-    padding-bottom: 200px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 50px;
+    margin: 30px auto;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 50px;
+    border-radius: 10px;
 }
 
-.gr-gauche{
+/* ───────── GAUCHE ───────── */
 
-    display: block;
-    align-items: center;
-    justify-content: center;
+.gr-gauche {
+    display: flex;
+    flex-direction: column;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-    gap: 20px;
-    width: 50% ;
+    gap: 10px;
+    width: 50%;
     border: none;
     padding: 20px 30px;
     background-color: #fff;
-    border-radius: 5px;
-    margin-top: 100px;
-
-
+    border-radius: 10px;
+    margin-top: 30px;
 }
 
-.align-vertical-input-client{
-
+h4 {
+    color: gray;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 15px 10px 5px;
     display: flex;
-    flex-direction: column;
-   
+    align-items: center;
+    gap: 8px;
 }
 
-.align-vertical-input-adresse {
-
-    display: flex;
-    flex-direction: column;
-
+h4 i {
+    color: purple;
 }
 
-.align-vertical-input-paiement {
-
-    display: flex;
-    flex-direction: column;
-
+label {
+    color: orange;
+    font-size: 0.95rem;
+    font-weight: bold;
+    text-shadow: 1px 0px 1px rgb(193, 193, 193);
 }
 
-
-.flex-input{
-
+.flex-input {
     display: flex;
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
-    margin: 10px;
-
-    
-    
+    margin: 8px 10px;
 }
 
-h4{
-
-    color: orange;
-    font-size: 1rem;
-    font-weight: bold;
-    margin: 10px;
-}
-
-label{
-
-    color: purple;
-        font-size: 1rem;
-        font-weight: bold;
-        text-shadow: 1px 0px 1px rgb(193, 193, 193);
-}
-
-input{
-
-    padding: 10px 50px;
+/* Inputs texte / email / tel / number */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"] {
+    padding: 10px 20px;
     margin: 5px 0px;
-    border-radius:2px ;
-    border: none;
-        box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.12);
-        
-
-
-}
-
-input:hover{
-
-padding: 12px 55px;
-transition: 0.3s ease;
-scale: 1.03;
-background-color: #e6e5e5;
-font-size: 16px;
-
-
-}
-
-
-select{
-   background-color: #e6e5e5;
-    padding: 5px;
-    color: gray;
+    border-radius: 5px;
     border: none;
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.12);
- 
-    border-radius: 2px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s ease;
+    width: 60%;
 }
 
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="tel"]:hover,
+input[type="number"]:hover,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus {
+    background-color: #f0ecec;
+    scale: 1.01;
+    font-size: 15px;
+    box-shadow: 2px 2px 8px rgba(128, 0, 128, 0.2);
+}
 
-/* gr droite*/
+/* ───────── RADIO PAIEMENT ───────── */
 
+.flex-input label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: orange;
+    font-weight: 500;
+    text-shadow: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 2px solid #e0e0e0;
+    width: 100%;
+    transition: 0.3s ease;
+    background-color: #fafafa;
+}
 
-/* ───────── DROITE : RÉSUMÉ COMMANDE ───────── */
+.flex-input label:has(input[type="radio"]) {
+    width: 100%;
+}
+
+.flex-input label:has(input[type="radio"]):hover {
+    border-color: purple;
+    background-color: #f9f0f9;
+    color: purple;
+}
+
+.flex-input label:has(input[type="radio"]:checked) {
+    border-color: purple;
+    background-color: #f3e8f3;
+    color: purple;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(128, 0, 128, 0.15);
+}
+
+input[type="radio"] {
+    accent-color: purple;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+/* icônes dans les labels radio */
+.flex-input label i {
+    color: purple;
+    font-size: 1rem;
+}
+
+/* ───────── DROITE ───────── */
 
 .gr-droite {
-
     display: flex;
     flex-direction: column;
-
     width: 50%;
-
     padding: 25px 30px;
-
     background-color: #fff;
-
     border-radius: 10px;
-
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-
-    margin-top: 100px;
-
+    margin-top: 30px;
 }
 
-/* contenu résumé */
-
 .conten {
-
     display: flex;
     flex-direction: column;
-
     gap: 15px;
-
 }
 
 /* lignes prix */
-
 .ligne {
-
     display: flex;
-
     justify-content: space-between;
-
+    align-items: center;
     font-size: 15px;
-
-    color: #444;
-
+    color: orange;
 }
 
-/* séparation */
+.ligne h4 {
+    color: orange;
+    margin: 0;
+}
 
-.ligne.total {
-
-    border-top: 1px solid #ddd;
-
-    padding-top: 10px;
-
+.moins,
+.plus {
+    background-color: #e6e5e5;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 12px;
     font-weight: bold;
+    color: #333;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
 
-    font-size: 17px;
+.moins:hover,
+.plus:hover {
+    background-color: orange;
+    color: white;
+    transform: scale(1.1);
+}
 
+#quantite {
+    font-size: 18px;
+    font-weight: bold;
     color: purple;
-
+    min-width: 30px;
+    text-align: center;
 }
 
 /* ───────── IMAGE PRODUIT ───────── */
 
 .carte-image {
-
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     gap: 15px;
-
     padding: 10px;
-
     border-radius: 10px;
-
     background: #f7f7f7;
-
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-
 }
 
-/* image */
-
 .carte-image img {
-
     height: 120px;
-
     width: 120px;
-
     object-fit: cover;
-
     border-radius: 10px;
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.12);
     background-color: #b3aaaa;
-
-}
-
-img:hover {
-
-    transform: scale(1.05);
-
     transition: 0.3s ease;
-
-    cursor: pointer;
-
 }
 
-/* texte produit */
+.carte-image img:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
 
 .carte-image h4 {
-
-    font-size: 16px;
-
+    font-size: 18px;
     color: purple;
-
+    font-weight: bold;
+    margin: 0;
 }
 
-/*  TYPES PRODUIT  */
+/* ───────── TYPES PRODUIT ───────── */
 
 .type {
-
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
-
     padding: 8px 0;
-
+    border-bottom: 1px dashed #eee;
 }
 
-/*  BOUTON COMMANDE  */
+.type label {
+    color: #333;
+    text-shadow: none;
+    font-weight: 600;
+}
+
+.prix-type,
+.prix-gros {
+    font-size: 14px;
+    color: purple;
+    margin: 2px 10px;
+}
+
+/* ───────── BOUTON CONFIRMER ───────── */
 
 .btn {
-
     margin-top: 20px;
-
 }
-
-/* bouton corrigé */
 
 .bt {
-
     width: 100%;
-
     padding: 14px;
-
     background-color: rgb(77, 14, 77);
-
     border-radius: 8px;
-
     border: none;
-
     color: white;
-
     font-size: 15px;
-
     font-weight: bold;
-
+    cursor: pointer;
     transition: 0.3s ease;
-
 }
-
-/* hover */
 
 .bt:hover {
-
-    cursor: pointer;
-
     background-color: rgb(15, 5, 15);
-
     transform: translateY(-2px);
-
+    box-shadow: 0 4px 12px rgba(77, 14, 77, 0.4);
 }
 
+hr{
 
-.special {
-
-
-
-    background-color: #e6e5e5;
-
-    border: none;
-
-    border-radius: 2px;
-
+    margin-left: 300px;
   
-
-    font-weight: bold;
-
-    color: #333;
-
-    transition: 0.3s ease;
-padding: 5px;
-}
-
-.special:hover {
-
-    background-color: #d4d3d3;
-
-    cursor: pointer;
-
-    transform: scale(1.1);
-
-}
-
-h1{
-
-    text-align: center;
-    color: purple;
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    
 }
