@@ -1,6 +1,9 @@
 <?php
 ob_start();
 include_once "../../../../bd/config.php";
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+ob_start();
 
 
 
@@ -19,7 +22,11 @@ $id_produit    = (int)$_POST['id_produit'];
 $quantite      = isset($_POST['quantite']) ? (int)$_POST['quantite'] : 1;
 $mode_paiement = $_POST['mode_paiement']; // 'fedapay' ou 'apres_livraison'
 
-$mode_stock = ($mode_paiement === 'fedapay') ? 'avant_livraison' : 'apres_livraison';
+$mode_stock = match ($mode_paiement) {
+    'fedapay'       => 'avant_livraison',
+    'en_boutique'   => 'en_boutique',
+    default         => 'apres_livraison',
+};
 
 // ENREGISTREMENT CLIENT
 
@@ -28,29 +35,32 @@ $stmt = $pdo->prepare("INSERT INTO CLIENT (nom, telephone, adresse, email) VALUE
 $stmt->execute([$nom, $telephone, $adresse, $email]);
 $id_client = $pdo->lastInsertId();
 
-// =====================================================================
+
 // RÉCUPÉRER LE PRODUIT
-// =====================================================================
+
 
 $stmt = $pdo->prepare("SELECT prix, nom_produit FROM PRODUIT WHERE id_produit = ?");
 $stmt->execute([$id_produit]);
 $produit = $stmt->fetch(PDO::FETCH_ASSOC);
 
+
+
+
+
+// CRÉER LA COMMANDE
+
 $prix          = $produit['prix'] ?? 0;
 $montant_total = $prix * $quantite;
 $numero_cmd    = "CMD" . time();
 
-// =====================================================================
-// CRÉER LA COMMANDE
-// =====================================================================
 
 $stmt = $pdo->prepare("INSERT INTO COMMANDE (numero_commande, montant_total, mode_paiement, statut_commande, id_client) VALUES (?, ?, ?, 'en_attente', ?)");
 $stmt->execute([$numero_cmd, $montant_total, $mode_stock, $id_client]);
 $id_commande = $pdo->lastInsertId();
 
-// =====================================================================
+
 // HEAD HTML commun (lien vers le CSS externe)
-// =====================================================================
+
 
 function html_head(string $title): string
 {
@@ -64,7 +74,7 @@ function html_head(string $title): string
 </head>';
 }
 
- 
+
 // PAIEMENT FEDAPAY
 
 
@@ -113,20 +123,31 @@ if ($mode_paiement === 'fedapay') {
     }
 
     // ── Vérification FedaPay côté serveur ────────────────────────────
-    require 'config-secret.php';
+    require __DIR__ . '/config_secret.php';
 
-    \Stripe\Stripe::setApiKey($stripe_secret_key);
-    $transaction_id = (int)$_POST['transaction_id'];
+    if (!isset($_POST['transaction_id']) || empty($_POST['transaction_id'])) {
+        die("Transaction ID manquant");
+    }
+
+    $transaction_id = (int) $_POST['transaction_id'];
 
     $ch = curl_init("https://api.fedapay.com/v1/transactions/{$transaction_id}");
+
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HTTPHEADER     => [
+        CURLOPT_HTTPHEADER => [
             "Authorization: Bearer $fedapay_secret",
             "Content-Type: application/json",
         ],
     ]);
-    $response = json_decode(curl_exec($ch), true);
+
+    $result = curl_exec($ch);
+
+    if ($result === false) {
+        die("Erreur API FedaPay");
+    }
+
+    $response = json_decode($result, true);
     curl_close($ch);
 
     $statut = $response['v1/transaction']['status'] ?? 'failed';
@@ -241,6 +262,73 @@ if ($mode_paiement === 'fedapay') {
     exit();
 }
 
+
+// Juste AVANT la ligne : // PAIEMENT À LA LIVRAISON
+
+if ($mode_paiement === 'en_boutique') {
+    ob_end_clean();
+    echo html_head('Commande enregistrée — Retrait en boutique');
+?>
+
+    <body class="page-delivery">
+        <div class="card">
+            <p class="brand">PREMMAR BOUTIQUES</p>
+
+            <div class="icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <path d="M9 22V12h6v10" />
+                    <rect x="2" y="7" width="20" height="5" rx="1" />
+                </svg>
+            </div>
+
+            <h1>Commande enregistrée !</h1>
+            <p class="subtitle">
+                Votre commande est prête à être réglée <strong>en boutique</strong>.<br>
+                Présentez votre numéro de commande lors du retrait.
+            </p>
+
+            <div class="details">
+                <div class="details-row">
+                    <span class="label">N° commande</span>
+                    <span class="value"><?= htmlspecialchars($numero_cmd) ?></span>
+                </div>
+                <div class="details-row">
+                    <span class="label">Montant total</span>
+                    <span class="value montant"><?= number_format($montant_total, 0, ',', ' ') ?> FCFA</span>
+                </div>
+                <div class="details-row">
+                    <span class="label">Mode de paiement</span>
+                    <span class="value">En boutique</span>
+                </div>
+                <div class="details-row">
+                    <span class="label">Contact</span>
+                    <span class="value"><?= htmlspecialchars($telephone) ?></span>
+                </div>
+            </div>
+
+            <a class="btn-retour" href="index.php">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                Retour à l'accueil
+            </a>
+        </div>
+    </body>
+
+    </html>
+<?php
+    exit();
+}
+
+// =====================================================================
+// PAIEMENT À LA LIVRAISON
+// =====================================================================
+
 // =====================================================================
 // PAIEMENT À LA LIVRAISON
 // =====================================================================
@@ -290,7 +378,7 @@ echo html_head('Commande enregistrée');
                 <span class="label">Contact</span>
                 <span class="value"><?= htmlspecialchars($telephone) ?></span>
             </div>
-            
+
         </div>
 
         <a class="btn-retour" href="index.php">

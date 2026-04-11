@@ -102,6 +102,13 @@ try {
                     <i class="fa-solid fa-truck"></i> Paiement À La Livraison
                 </label>
             </div>
+
+            <div class="flex-input">
+                <label>
+                    <input type="radio" name="mode_paiement" value="en_boutique" id="radio_boutique">
+                    <i class="fa-solid fa-shop"></i> Paiement En Boutiques
+                </label>
+            </div>
         </div>
 
         <div class="gr-droite">
@@ -109,7 +116,7 @@ try {
                 <?php if (!empty($types)): ?>
                     <?php foreach ($types as $type): ?>
                         <div class="type">
-                            <label style="color: purple;" ><?= htmlspecialchars($type['nom_type']) ?></label>
+                            <label style="color: purple;"><?= htmlspecialchars($type['nom_type']) ?></label>
                             <input type="radio" name="type" value="<?= (int)$type['id_type'] ?>"
                                 data-prix="<?= $type['prix'] ?>" data-prix-gros="<?= $type['prix_gros'] ?>">
                         </div>
@@ -193,7 +200,7 @@ try {
             }
 
             // Paiement à la livraison → soumettre directement sans widget
-            if (modePaiement.value === 'apres_livraison') return;
+            if (modePaiement.value === 'apres_livraison' || modePaiement.value === 'en_boutique') return
 
             // Paiement FedaPay → ouvrir le widget
             e.preventDefault();
@@ -225,7 +232,7 @@ try {
                         document.getElementById('transaction_id').value = transaction.id;
                         document.getElementById('commandeForm').submit();
                     } else {
-                        alert('❌ Paiement annulé ou échoué. Veuillez réessayer.');
+                        alert(' Paiement annulé ou échoué. Veuillez réessayer.');
                     }
                 }
             }).open();

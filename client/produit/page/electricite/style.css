@@ -138,12 +138,24 @@ input {
     margin-left: 150px;
     margin-top: 20px;
     border: none;
-    box-shadow: 1px 0px 1px 0px rgb(75, 73, 73);
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.12);
     padding: 10px;
     font-size: 20px;
-    border-radius: 10px;
+    border-radius: 6px;
     width: 80%;
+    background-color: #e8e8e8;
 }
+input:focus {
+    outline: none;
+    box-shadow: 0 0 5px #4f1f6e;
+}
+
+input::hover{
+
+    cursor: pointer;
+}
+
+
 
 h1 {
 

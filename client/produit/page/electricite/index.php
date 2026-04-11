@@ -22,20 +22,24 @@
                     </div>
                 </nav>
                 <nav>
-                    <div class="align-nav">
-                        <ul>
-                            <li><a href="../page-accueil/index.html">Accueil</a></li>
-                            <li><a href="../boutique/index.html">Cathegories</a></li>
-                            <li><a href="../page-accueil/index.html">Produit</a></li>
-                            <li><a href="../page-accueil/index.html">Paniers</a></li>
-                        </ul>
-                    </div>
+
                     <div class="block">
                         <div class="serach">
-                            <input type="search" placeholder=" recherche">
+                            <input type="search" placeholder=" Recherche">
                         </div>
-                        <h1 style="margin-top: 70px;">Electricite</h1>
+
                     </div>
+
+                    <div class="align-nav">
+                        <ul>
+                            <a href="../page-accueil/index.html"> <i class="fa-solid fa-house"></i> Accueil</a>
+                            <a href="../boutique/index.html"> <i class="fa-solid fa-folder"></i> Cathegories</a>
+                            <a href="../page-accueil/index.html"> <i class="fa-solid fa-box"></i> Produit</a>
+                            <a href="../page-accueil/index.html"> <i class="fa-solid fa-shopping-cart"></i> Paniers</a>
+                        </ul>
+                    </div>
+
+                    <h1 style="margin-top: 70px;">ELECTRICITE</h1>
                 </nav>
             </header>
         </div>
