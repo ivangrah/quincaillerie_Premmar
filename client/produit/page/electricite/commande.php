@@ -2,7 +2,6 @@
 ob_start();
 include_once "../../../../bd/config.php";
 
-// Récupérer l'id du produit
 $id_produit = 0;
 if (isset($_POST['id_produit'])) {
     $id_produit = (int)$_POST['id_produit'];
@@ -14,27 +13,29 @@ if ($id_produit === 0) {
     die("<p style='color:red'>Produit introuvable.</p>");
 }
 
-// Récupérer le produit et ses types
 try {
     $connection = new PDO($dsn, $username, $password);
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $sql = "SELECT p.*, sc.nom_sous_categorie
             FROM PRODUIT p
-            INNER JOIN SOUS_CATEGORIE sc ON p.id_sous_categorie = sc.id_sous_categorie
+            INNER JOIN SOUS_CATEGORIE sc 
+            ON p.id_sous_categorie = sc.id_sous_categorie
             WHERE p.id_produit = :id";
+
     $stmt = $connection->prepare($sql);
     $stmt->execute([':id' => $id_produit]);
     $produit = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$produit) die("<p style='color:red'>Produit introuvable.</p>");
+    if (!$produit)
+        die("<p style='color:red'>Produit introuvable.</p>");
 
     $sql2 = "SELECT * FROM type_produit WHERE id_produit = :id";
     $stmt2 = $connection->prepare($sql2);
     $stmt2->execute([':id' => $id_produit]);
     $types = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $error) {
-    echo "<pre style='color:red'>ERREUR : " . $error->getMessage() . "</pre>";
+    echo "<pre style='color:red'>ERREUR : " . htmlspecialchars($error->getMessage()) . "</pre>";
     die();
 }
 ?>
@@ -44,125 +45,272 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page de commande</title>
+    <title>Commande — <?= htmlspecialchars($produit['nom_produit']) ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="commande.css">
-    <!-- SDK FedaPay -->
-    <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7" defer></script>
 </head>
 
 <body>
-    <h1>Page De Commande</h1>
-    <hr size="2" color="gray" width="60%" align="center">
 
-    <form method="POST" action="tratement.php?id=<?= $id_produit ?>" id="commandeForm">
-        <div class="gr-gauche">
-            <h4><i class="fa-solid fa-user"></i> Identité</h4>
-            <div class="flex-input">
-                <label for="nom">NOM COMPLET :</label>
-                <input type="text" id="nom" placeholder="Grah Désiré Jean Ivan" name="nom" required>
+    <!-- ══════════ NAVBAR ══════════ -->
+    <nav class="navbar">
+        <a href="../../../../index.php" class="navbar-brand">
+            <div class="navbar-logo-icon">
+                <i class="fa-solid fa-bolt"></i>
             </div>
-            <div class="flex-input">
-                <label for="email">EMAIL :</label>
-                <input type="email" id="email" placeholder="desire@gmail.com" name="email" required>
-            </div>
-            <div class="flex-input">
-                <label for="tel">TÉLÉPHONE :</label>
-                <input type="tel" id="tel" placeholder="+225 07 69 19 37 53" name="telephone" required>
-            </div>
+            <span class="navbar-name">PREMMAR</span>
+        </a>
 
-            <h4><i class="fa-solid fa-location-dot"></i> Adresse de livraison</h4>
-            <div class="flex-input">
-                <label for="adresse">Adresse</label>
-                <input type="text" id="adresse" placeholder="Angré Djorogobité 1" name="adresse" required>
-            </div>
-            <div class="flex-input">
-                <label for="ville">Ville</label>
-                <input type="text" id="ville" placeholder="ABIDJAN" name="ville">
-            </div>
-            <div class="flex-input">
-                <label for="code">Code Postal</label>
-                <input type="number" id="code" placeholder="1000" name="code_postal">
-            </div>
+        <ul class="navbar-links">
+            <li><a href="../../../../index.php"><i class="fa-solid fa-house"></i> Accueil</a></li>
+            <li><a href="../electricite.php"><i class="fa-solid fa-plug"></i> Électricité</a></li>
+            <li><a href="#" class="active"><i class="fa-solid fa-cart-shopping"></i> Commande</a></li>
+        </ul>
 
-            <h4><i class="fa-solid fa-credit-card"></i> PAIEMENT</h4>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
 
-            <!-- Option 1 : Paiement avant livraison via FedaPay -->
-            <div class="flex-input">
-                <label>
-                    <input type="radio" name="mode_paiement" value="fedapay" id="radio_fedapay">
-                    <i class="fa-solid fa-bolt"></i> Paiement Avant Livraison (FedaPay)
-                </label>
-            </div>
+    <!-- ══════════ MENU MOBILE ══════════ -->
+    <div class="nav-mobile" id="navMobile">
+        <a href="../../../../index.php"><i class="fa-solid fa-house"></i> Accueil</a>
+        <a href="../electricite.php"><i class="fa-solid fa-plug"></i> Électricité</a>
+        <a href="#" class="active"><i class="fa-solid fa-cart-shopping"></i> Commande</a>
+    </div>
 
-            <!-- Option 2 : Paiement à la livraison -->
-            <div class="flex-input">
-                <label>
-                    <input type="radio" name="mode_paiement" value="apres_livraison" id="radio_livraison">
-                    <i class="fa-solid fa-truck"></i> Paiement À La Livraison
-                </label>
-            </div>
+    <!-- ══════════ FORMULAIRE SPLIT ══════════ -->
+    <form method="POST" action="tratement.php" id="commandeForm">
+        <div class="split-wrapper">
 
-            <div class="flex-input">
-                <label>
-                    <input type="radio" name="mode_paiement" value="en_boutique" id="radio_boutique">
-                    <i class="fa-solid fa-shop"></i> Paiement En Boutiques
-                </label>
-            </div>
-        </div>
+            <!-- ─── PANNEAU GAUCHE : Résumé produit ─── -->
+            <div class="panel-left">
 
-        <div class="gr-droite">
-            <div class="conten">
-                <?php if (!empty($types)): ?>
-                    <?php foreach ($types as $type): ?>
-                        <div class="type">
-                            <label style="color: purple;"><?= htmlspecialchars($type['nom_type']) ?></label>
-                            <input type="radio" name="type" value="<?= (int)$type['id_type'] ?>"
-                                data-prix="<?= $type['prix'] ?>" data-prix-gros="<?= $type['prix_gros'] ?>">
-                        </div>
-                        <label>Prix :</label>
-                        <h4 class="prix-type"><?= number_format($type['prix'], 0, ',', ' ') ?> FCFA</h4>
-                        <label>Prix En Gros :</label>
-                        <h4 class="prix-gros"><?= number_format($type['prix_gros'], 0, ',', ' ') ?> FCFA</h4>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p style="color: purple; text-align: center; ">Aucun type disponible pour ce produit.</p>
-                <?php endif; ?>
+                <!-- Tag catégorie -->
+                <span class="prod-tag">
+                    <i class="fa-solid fa-bolt fa-xs"></i>
+                    <?= htmlspecialchars($produit['nom_sous_categorie']) ?>
+                </span>
 
-                <div class="ligne">
-                    <h4>Quantité :</h4>
-                    <button type="button" class="moins"> - </button>
-                    <span id="quantite">1</span>
-                    <button type="button" class="plus"> + </button>
-                </div>
-
-                <div class="carte-image">
+                <!-- Image produit -->
+                <div class="prod-image-wrap">
                     <img src="../../images/electricite/<?= htmlspecialchars($produit['image']) ?>"
                         alt="<?= htmlspecialchars($produit['nom_produit']) ?>">
-                    <h4 id="prix_total"><?= number_format($produit['prix'], 0, ',', ' ') ?> FCFA</h4>
                 </div>
 
+                <!-- Nom produit -->
+                <p class="prod-title"><?= htmlspecialchars($produit['nom_produit']) ?></p>
+                <p class="prod-sub">Sélectionner un type</p>
+
+                <hr class="sep">
+
+                <!-- Types de produit -->
+                <span class="types-label">Type de produit</span>
+
+                <?php foreach ($types as $key => $type): ?>
+                    <div class="type">
+                        <label>
+                            <?= htmlspecialchars($type['nom_type']) ?>
+                            <small>
+                                Détail : <?= number_format($type['prix'], 0, ',', ' ') ?> FCFA
+                                &nbsp;·&nbsp;
+                                Gros : <?= number_format($type['prix_gros'], 0, ',', ' ') ?> FCFA
+                            </small>
+                        </label>
+                        <input type="radio"
+                            name="type"
+                            value="<?= (int)$type['id_type'] ?>"
+                            data-prix="<?= (float)$type['prix'] ?>"
+                            <?= $key === 0 ? 'checked' : '' ?>>
+                    </div>
+                <?php endforeach; ?>
+
+                <hr class="sep">
+
+                <!-- Quantité -->
+                <div class="qty-row">
+                    <span class="qty-label">Quantité</span>
+                    <div class="qty-controls">
+                        <button type="button" class="moins">−</button>
+                        <span id="quantite">1</span>
+                        <button type="button" class="plus">+</button>
+                    </div>
+                </div>
+
+                <!-- Prix total -->
+                <div class="prix-total-wrap">
+                    <span class="prix-total-label">Total</span>
+                    <span id="prix_total">
+                        <?= number_format(
+                            count($types) > 0 ? $types[0]['prix'] : $produit['prix'],
+                            0,
+                            ',',
+                            ' '
+                        ) ?> FCFA
+                    </span>
+                </div>
+
+                <!-- Champs cachés -->
                 <input type="hidden" name="id_produit" value="<?= (int)$produit['id_produit'] ?>">
                 <input type="hidden" name="quantite" id="quantite_hidden" value="1">
-                <!-- Reçoit l'ID de transaction FedaPay après paiement réussi -->
-                <input type="hidden" name="transaction_id" id="transaction_id" value="">
 
+                <!-- Bouton confirmer -->
                 <div class="btn">
-                    <button class="bt" type="submit">Confirmer</button>
+                    <button class="bt" type="submit">
+                        <i class="fa-solid fa-check"></i> Confirmer la commande
+                    </button>
                 </div>
-            </div>
-        </div>
+
+            </div><!-- /panel-left -->
+
+            <!-- ─── PANNEAU DROIT : Formulaire ─── -->
+            <div class="panel-right">
+
+                <div class="form-heading">
+                    <span class="step-tag">Finaliser votre commande</span>
+                    <h2>Vos informations</h2>
+                </div>
+
+                <!-- Section 1 : Identité -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <div class="section-num">1</div>
+                        <h3>Identité</h3>
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <div class="fields-grid">
+                        <div class="flex-input field-full">
+                            <label>Nom complet</label>
+                            <input type="text" id="nom" name="nom" placeholder="Ex : Konan Yao Marc" required>
+                        </div>
+                        <div class="flex-input">
+                            <label>Email</label>
+                            <input type="email" id="email" name="email" placeholder="vous@exemple.com" required>
+                        </div>
+                        <div class="flex-input">
+                            <label>Téléphone</label>
+                            <input type="tel" id="tel" name="telephone" placeholder="+225 07 00 00 00" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2 : Adresse -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <div class="section-num">2</div>
+                        <h3>Adresse de livraison</h3>
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+
+                    <div class="fields-grid">
+                        <div class="flex-input field-full">
+                            <label>Adresse</label>
+                            <input type="text" name="adresse" placeholder="Rue, quartier, commune…" required>
+                        </div>
+                        <div class="flex-input">
+                            <label>Ville</label>
+                            <input type="text" name="ville" placeholder="Abidjan">
+                        </div>
+                        <div class="flex-input">
+                            <label>Code postal</label>
+                            <input type="number" name="code_postal" placeholder="00000">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3 : Paiement -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <div class="section-num">3</div>
+                        <h3>Mode de paiement</h3>
+                        <i class="fa-solid fa-credit-card"></i>
+                    </div>
+
+                    <div class="payment-grid">
+
+                        <label class="pay-option">
+                            <input type="radio" name="mode_paiement" value="geniuspay" required>
+                            <div class="pay-icon"><i class="fa-solid fa-wallet"></i></div>
+                            <div class="pay-info">
+                                <strong>Paiement avant livraison</strong>
+                                <small>Via GeniusPay — Orange Money, MTN, Wave, Moov</small>
+                            </div>
+                        </label>
+
+                        <label class="pay-option">
+                            <input type="radio" name="mode_paiement" value="apres_livraison">
+                            <div class="pay-icon"><i class="fa-solid fa-truck"></i></div>
+                            <div class="pay-info">
+                                <strong>Paiement à la livraison</strong>
+                                <small>Règlement en espèces à la réception</small>
+                            </div>
+                        </label>
+
+                        <label class="pay-option">
+                            <input type="radio" name="mode_paiement" value="en_boutique">
+                            <div class="pay-icon"><i class="fa-solid fa-store"></i></div>
+                            <div class="pay-info">
+                                <strong>Paiement en boutique</strong>
+                                <small>Venez régler directement en magasin</small>
+                                <small>ADRESSE DU MAGASIN : ANGRE DJOROGOBITE 2 PRES
+                                    DU PETIT MARCHE</small>
+                                </small>
+                            </div>
+
+                        </label>
+
+                    </div>
+                </div>
+
+            </div><!-- /panel-right -->
+
+        </div><!-- /split-wrapper -->
     </form>
 
+    <!-- ══════════ SCRIPTS ══════════ -->
     <script>
+        // ── Hamburger ──
+        const hamburger = document.getElementById('hamburger');
+        const navMobile = document.getElementById('navMobile');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('open');
+            navMobile.classList.toggle('open');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navMobile.contains(e.target)) {
+                hamburger.classList.remove('open');
+                navMobile.classList.remove('open');
+            }
+        });
+
+        // ── Prix / Quantité ──
         let quantite = 1;
-        let prix = <?= $produit['prix'] ?>;
+        let prixUnitaire = <?= count($types) > 0 ? (float)$types[0]['prix'] : (float)$produit['prix'] ?>;
+        const FRAIS_LIVRAISON = 2000;
+        const FRAIS_MAXIMUM = 5000;
+
         const quantiteSpan = document.getElementById('quantite');
         const quantiteHidden = document.getElementById('quantite_hidden');
         const prixTotal = document.getElementById('prix_total');
 
         function updatePrix() {
-            prixTotal.textContent = (prix * quantite).toLocaleString('fr-FR') + ' FCFA';
+            let totalProduits = prixUnitaire * quantite;
+            let totalFinal = totalProduits;
+
+            // Appliquer les frais si le total est entre 0 et 5000 (selon ta logique)
+            if (totalProduits > 0 && totalProduits <= 5000) {
+                totalFinal += FRAIS_LIVRAISON;
+            } else {
+
+                totalFinal += FRAIS_MAXIMUM;
+
+
+            }
+
+            prixTotal.textContent = totalFinal;
         }
 
         document.querySelector('.plus').addEventListener('click', () => {
@@ -181,63 +329,22 @@ try {
             }
         });
 
-        // Changer le prix quand on sélectionne un type
         document.querySelectorAll('input[name="type"]').forEach(radio => {
-            radio.addEventListener('change', e => {
-                prix = parseFloat(e.target.dataset.prix);
+            radio.addEventListener('change', (e) => {
+                prixUnitaire = parseFloat(e.target.dataset.prix);
                 updatePrix();
             });
         });
-
-        // ✅ Interception du formulaire
+        // ── Validation ──
         document.getElementById('commandeForm').addEventListener('submit', function(e) {
-            const modePaiement = document.querySelector('input[name="mode_paiement"]:checked');
-
-            if (!modePaiement) {
+            const mode = document.querySelector('input[name="mode_paiement"]:checked');
+            if (!mode) {
                 e.preventDefault();
-                alert('Veuillez choisir un mode de paiement.');
-                return;
+                alert("Veuillez choisir un mode de paiement.");
             }
-
-            // Paiement à la livraison → soumettre directement sans widget
-            if (modePaiement.value === 'apres_livraison' || modePaiement.value === 'en_boutique') return
-
-            // Paiement FedaPay → ouvrir le widget
-            e.preventDefault();
-
-            const nom = document.getElementById('nom').value;
-            const email = document.getElementById('email').value;
-            const tel = document.getElementById('tel').value;
-            const montantTotal = prix * quantite;
-
-            FedaPay.init({
-                public_key: 'pk_live_y2lBbYV3Y3UpCjXp3XL7omqx',
-                transaction: {
-                    amount: montantTotal,
-                    description: '<?= addslashes(htmlspecialchars($produit['nom_produit'])) ?>',
-                    currency: {
-                        iso: 'XOF'
-                    }
-                },
-                customer: {
-                    email: email,
-                    lastname: nom,
-                    phone_number: {
-                        number: tel,
-                        country: 'CI'
-                    }
-                },
-                onComplete: function(transaction) {
-                    if (transaction.reason === FedaPay.TRANSACTION_APPROVED) {
-                        document.getElementById('transaction_id').value = transaction.id;
-                        document.getElementById('commandeForm').submit();
-                    } else {
-                        alert(' Paiement annulé ou échoué. Veuillez réessayer.');
-                    }
-                }
-            }).open();
         });
     </script>
+
 </body>
 
 </html>

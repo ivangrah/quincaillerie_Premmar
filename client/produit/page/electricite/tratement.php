@@ -1,393 +1,138 @@
 <?php
 ob_start();
 include_once "../../../../bd/config.php";
+include_once "config_secret.php";
+
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-ob_start();
 
-
-
-// VALIDATION DES CHAMPS
-
-
-if (!isset($_POST['nom'], $_POST['telephone'], $_POST['adresse'], $_POST['email'], $_POST['id_produit'], $_POST['mode_paiement'])) {
-    die("Veuillez remplir tous les champs obligatoires.");
+// 1. RÉCUPÉRER LES DONNÉES DU FORMULAIRE
+if (!isset($_POST['id_produit'], $_POST['nom'], $_POST['mode_paiement'])) {
+    die("Données du formulaire manquantes.");
 }
 
 $nom           = htmlspecialchars(trim($_POST['nom']));
 $telephone     = htmlspecialchars(trim($_POST['telephone']));
-$adresse       = htmlspecialchars(trim($_POST['adresse']));
 $email         = htmlspecialchars(trim($_POST['email']));
+$adresse       = htmlspecialchars(trim($_POST['adresse']));
 $id_produit    = (int)$_POST['id_produit'];
 $quantite      = isset($_POST['quantite']) ? (int)$_POST['quantite'] : 1;
-$mode_paiement = $_POST['mode_paiement']; // 'fedapay' ou 'apres_livraison'
+$mode_form     = $_POST['mode_paiement'];
 
-$mode_stock = match ($mode_paiement) {
-    'fedapay'       => 'avant_livraison',
-    'en_boutique'   => 'en_boutique',
-    default         => 'apres_livraison',
-};
-
-// ENREGISTREMENT CLIENT
-
-
-$stmt = $pdo->prepare("INSERT INTO CLIENT (nom, telephone, adresse, email) VALUES (?, ?, ?, ?)");
-$stmt->execute([$nom, $telephone, $adresse, $email]);
-$id_client = $pdo->lastInsertId();
-
-
-// RÉCUPÉRER LE PRODUIT
-
-
+// 2. RÉCUPÉRER LE PRIX
 $stmt = $pdo->prepare("SELECT prix, nom_produit FROM PRODUIT WHERE id_produit = ?");
 $stmt->execute([$id_produit]);
 $produit = $stmt->fetch(PDO::FETCH_ASSOC);
 
+if (!$produit) die("Produit inexistant.");
 
-
-
-
-// CRÉER LA COMMANDE
-
-$prix          = $produit['prix'] ?? 0;
+$prix = (float)$produit['prix'];
 $montant_total = $prix * $quantite;
-$numero_cmd    = "CMD" . time();
+$numero_cmd = "CMD" . time();
 
+// --- TRADUCTION POUR MODE_PAIEMENT (ENUM) ---
+$mode_pour_bd = match ($mode_form) {
+    'geniuspay'   => 'avant_livraison',
+    'en_boutique' => 'en_boutique',
+    default       => 'apres_livraison',
+};
 
-$stmt = $pdo->prepare("INSERT INTO COMMANDE (numero_commande, montant_total, mode_paiement, statut_commande, id_client) VALUES (?, ?, ?, 'en_attente', ?)");
-$stmt->execute([$numero_cmd, $montant_total, $mode_stock, $id_client]);
+// 3. ENREGISTRER LE CLIENT
+$stmt_cli = $pdo->prepare("INSERT INTO CLIENT (nom, telephone, email, adresse) VALUES (?, ?, ?, ?)");
+$stmt_cli->execute([$nom, $telephone, $email, $adresse]);
+$id_client = $pdo->lastInsertId();
+
+// 4. ENREGISTRER LA COMMANDE
+$sql_cmd = "INSERT INTO COMMANDE (numero_commande, montant_total, mode_paiement, statut_commande, id_client, id_produit, quantite) 
+VALUES (?, ?, ?, 'en_attente', ?, ?, ?)";
+$stmt_cmd = $pdo->prepare($sql_cmd);
+
+// On envoie les 6 valeurs correspondant aux 6 points d'interrogation
+$stmt_cmd->execute([
+$numero_cmd,
+$montant_total,
+$mode_pour_bd,
+$id_client,
+$id_produit,
+$quantite
+                ]);
 $id_commande = $pdo->lastInsertId();
 
-
-// HEAD HTML commun (lien vers le CSS externe)
-
-
-function html_head(string $title): string
-{
-    return '<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>' . $title . ' — PREMMAR BOUTIQUES</title>
-  <link rel="stylesheet" href="tratement.css">
-</head>';
+// 5. VÉRIFICATION MONTANT MINIMUM GENIUSPAY
+if ($mode_form === 'geniuspay' && $montant_total < 200) {
+    $pdo->prepare("DELETE FROM COMMANDE WHERE id_commande = ?")->execute([$id_commande]);
+    die("Le montant total (" . $montant_total . " FCFA) est inférieur au minimum de 200 FCFA requis par GeniusPay.");
 }
 
+/* ============================================================
+   CAS : GENIUSPAY (LOGIQUE DE REDIRECTION)
+   ============================================================ */
+if ($mode_form === 'geniuspay') {
+    $api_url = "https://pay.genius.ci/api/v1/merchant/payments";
 
-// PAIEMENT FEDAPAY
+    $payload = [
+        "amount"      => $montant_total,
+        "currency"    => "XOF",
+        "description" => "Commande n°" . $numero_cmd . " - " . $produit['nom_produit'],
+        "customer"    => [
+            "name"  => $nom,
+            "email" => $email,
+            "phone" => $telephone
+        ],
+        "success_url" => "http://localhost/projet_quincaillerie/client/produit/page/electricite/confirmation.php?id_cmd=" . $id_commande,
+        "error_url"   => "http://localhost/projet_quincaillerie/client/produit/page/electricite/commande.php?id=" . $id_produit
+    ];
 
-
-if ($mode_paiement === 'fedapay') {
-
-    // Transaction manquante 
-    if (!isset($_POST['transaction_id']) || empty($_POST['transaction_id'])) {
-
-        $pdo->prepare("DELETE FROM COMMANDE WHERE id_commande = ?")->execute([$id_commande]);
-        ob_end_clean();
-
-        echo html_head('Paiement refusé');
-?>
-
-
-        <body class="page-error">
-            <div class="card">
-                <p class="brand">PREMMAR BOUTIQUES</p>
-
-                <div class="icon-wrap">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="15" y1="9" x2="9" y2="15" />
-                        <line x1="9" y1="9" x2="15" y2="15" />
-                    </svg>
-                </div>
-
-                <h1>Transaction manquante</h1>
-                <p class="subtitle">
-                    Aucune transaction FedaPay n'a été reçue.<br>
-                    Veuillez <strong>réessayer</strong> votre paiement.
-                </p>
-
-                <a class="btn-retour" href="javascript:history.back()">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="15 18 9 12 15 6" />
-                    </svg>
-                    Réessayer
-                </a>
-            </div>
-        </body>
-
-        </html>
-    <?php
-        exit();
-    }
-
-    // ── Vérification FedaPay côté serveur ────────────────────────────
-    require __DIR__ . '/config_secret.php';
-
-    if (!isset($_POST['transaction_id']) || empty($_POST['transaction_id'])) {
-        die("Transaction ID manquant");
-    }
-
-    $transaction_id = (int) $_POST['transaction_id'];
-
-    $ch = curl_init("https://api.fedapay.com/v1/transactions/{$transaction_id}");
-
+    $ch = curl_init($api_url);
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HTTPHEADER => [
-            "Authorization: Bearer $fedapay_secret",
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => json_encode($payload),
+        CURLOPT_HTTPHEADER     => [
+            "X-API-Key: " . GENIUSPAY_PUBLIC_KEY,
+            "X-API-Secret: " . GENIUSPAY_SECRET,
             "Content-Type: application/json",
+            "Accept: application/json"
         ],
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_TIMEOUT        => 30
     ]);
 
-    $result = curl_exec($ch);
-
-    if ($result === false) {
-        die("Erreur API FedaPay");
-    }
-
-    $response = json_decode($result, true);
+    $response_json = curl_exec($ch);
+    $http_code     = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
-    $statut = $response['v1/transaction']['status'] ?? 'failed';
+    $response = json_decode($response_json, true);
 
-    // ── Paiement approuvé ────────────────────────────────────────────
-    if ($statut === 'approved') {
-
-        $pdo->prepare("UPDATE COMMANDE SET statut_commande = 'payee' WHERE id_commande = ?")
-            ->execute([$id_commande]);
+    if ($http_code === 201 || (isset($response['success']) && $response['success'] === true)) {
         ob_end_clean();
-
-        echo html_head('Paiement confirmé');
-    ?>
-
-        <body class="page-success">
-            <div class="card">
-                <p class="brand">PREMMAR BOUTIQUES</p>
-
-                <div class="icon-wrap">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                </div>
-
-                <h1>Paiement confirmé !</h1>
-                <p class="subtitle">
-                    Votre paiement FedaPay a été <strong>validé avec succès</strong>.<br>
-                    Merci pour votre confiance.
-                </p>
-
-                <div class="details">
-                    <div class="details-row">
-                        <span class="label">N° commande</span>
-                        <span class="value"><?= htmlspecialchars($numero_cmd) ?></span>
-                    </div>
-                    <div class="details-row">
-                        <span class="label">Montant payé</span>
-                        <span class="value montant"><?= number_format($montant_total, 0, ',', ' ') ?> FCFA</span>
-                    </div>
-                    <div class="details-row">
-                        <span class="label">Reçu envoyé à</span>
-                        <span class="value"><?= htmlspecialchars($email) ?></span>
-                    </div>
-                    <div class="details-row">
-                        <span class="label">Mode de paiement</span>
-                        <span class="value">FedaPay</span>
-                    </div>
-                </div>
-
-                <a class="btn-retour" href="index.php">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                        <polyline points="9 22 9 12 15 12 15 22" />
-                    </svg>
-                    Retour à l'accueil
-                </a>
-            </div>
-        </body>
-
-        </html>
-    <?php
+        $url_redirection = $response['data']['checkout_url'] ?? $response['data']['payment_url'];
+        header("Location: " . $url_redirection);
         exit();
+    } else {
+        $pdo->prepare("DELETE FROM COMMANDE WHERE id_commande = ?")->execute([$id_commande]);
+        echo "<h3>Erreur GeniusPay</h3>";
+        echo "Réponse brute : <pre>" . htmlspecialchars($response_json) . "</pre>";
+        die();
     }
-
-    // ── Paiement refusé ──────────────────────────────────────────────
-    $pdo->prepare("DELETE FROM COMMANDE WHERE id_commande = ?")->execute([$id_commande]);
-    ob_end_clean();
-
-    echo html_head('Paiement refusé');
-    ?>
-
-    <body class="page-error">
-        <div class="card">
-            <p class="brand">PREMMAR BOUTIQUES</p>
-
-            <div class="icon-wrap">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="15" y1="9" x2="9" y2="15" />
-                    <line x1="9" y1="9" x2="15" y2="15" />
-                </svg>
-            </div>
-
-            <h1>Paiement refusé</h1>
-            <p class="subtitle">
-                Votre paiement FedaPay n'a pas pu être validé.<br>
-                Statut reçu : <strong><?= htmlspecialchars($statut) ?></strong>
-            </p>
-
-            <div class="details">
-                <div class="details-row">
-                    <span class="label">N° tentative</span>
-                    <span class="value"><?= htmlspecialchars($numero_cmd) ?></span>
-                </div>
-                <div class="details-row">
-                    <span class="label">Montant concerné</span>
-                    <span class="value montant"><?= number_format($montant_total, 0, ',', ' ') ?> FCFA</span>
-                </div>
-            </div>
-
-            <a class="btn-retour" href="javascript:history.back()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="15 18 9 12 15 6" />
-                </svg>
-                Réessayer
-            </a>
-        </div>
-    </body>
-
-    </html>
-<?php
-    exit();
 }
-
-
-// Juste AVANT la ligne : // PAIEMENT À LA LIVRAISON
-
-if ($mode_paiement === 'en_boutique') {
-    ob_end_clean();
-    echo html_head('Commande enregistrée — Retrait en boutique');
-?>
-
-    <body class="page-delivery">
-        <div class="card">
-            <p class="brand">PREMMAR BOUTIQUES</p>
-
-            <div class="icon-wrap">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    <path d="M9 22V12h6v10" />
-                    <rect x="2" y="7" width="20" height="5" rx="1" />
-                </svg>
-            </div>
-
-            <h1>Commande enregistrée !</h1>
-            <p class="subtitle">
-                Votre commande est prête à être réglée <strong>en boutique</strong>.<br>
-                Présentez votre numéro de commande lors du retrait.
-            </p>
-
-            <div class="details">
-                <div class="details-row">
-                    <span class="label">N° commande</span>
-                    <span class="value"><?= htmlspecialchars($numero_cmd) ?></span>
-                </div>
-                <div class="details-row">
-                    <span class="label">Montant total</span>
-                    <span class="value montant"><?= number_format($montant_total, 0, ',', ' ') ?> FCFA</span>
-                </div>
-                <div class="details-row">
-                    <span class="label">Mode de paiement</span>
-                    <span class="value">En boutique</span>
-                </div>
-                <div class="details-row">
-                    <span class="label">Contact</span>
-                    <span class="value"><?= htmlspecialchars($telephone) ?></span>
-                </div>
-            </div>
-
-            <a class="btn-retour" href="index.php">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2.5"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-                Retour à l'accueil
-            </a>
-        </div>
-    </body>
-
-    </html>
-<?php
-    exit();
-}
-
-// =====================================================================
-// PAIEMENT À LA LIVRAISON
-// =====================================================================
-
-// =====================================================================
-// PAIEMENT À LA LIVRAISON
-// =====================================================================
 
 ob_end_clean();
-
-echo html_head('Commande enregistrée');
 ?>
+<!DOCTYPE html>
+<html lang="fr">
 
-<body class="page-delivery">
-    <div class="card">
-        <p class="brand">PREMMAR BOUTIQUES</p>
+<head>
+    <meta charset="UTF-8">
+    <title>Commande enregistrée</title>
+</head>
 
-        <div class="icon-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="1" y="3" width="15" height="13" rx="2" />
-                <path d="M16 8h4l3 5v3h-7V8z" />
-                <circle cx="5.5" cy="18.5" r="2.5" />
-                <circle cx="18.5" cy="18.5" r="2.5" />
-            </svg>
-        </div>
-
-        <h1>Commande enregistrée !</h1>
-        <p class="subtitle">
-            Votre commande a bien été prise en compte.<br>
-            Vous serez <strong>contacté pour la livraison</strong>.
-        </p>
-
-        <div class="details">
-            <div class="details-row">
-                <span class="label">N° commande</span>
-                <span class="value"><?= htmlspecialchars($numero_cmd) ?></span>
-            </div>
-            <div class="details-row">
-                <span class="label">Montant total</span>
-                <span class="value montant"><?= number_format($montant_total, 0, ',', ' ') ?> FCFA</span>
-            </div>
-            <div class="details-row">
-                <span class="label">Mode de paiement</span>
-                <span class="value">À la livraison</span>
-            </div>
-            <div class="details-row">
-                <span class="label">Adresse</span>
-                <span class="value"><?= htmlspecialchars($adresse) ?></span>
-            </div>
-            <div class="details-row">
-                <span class="label">Contact</span>
-                <span class="value"><?= htmlspecialchars($telephone) ?></span>
-            </div>
-
-        </div>
-
-        <a class="btn-retour" href="index.php">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-            Retour à l'accueil
-        </a>
+<body>
+    <div style="text-align:center; margin-top:50px;">
+        <h1>Merci, <?= htmlspecialchars($nom) ?> !</h1>
+        <p>Votre commande <strong><?= $numero_cmd ?></strong> a bien été enregistrée.</p>
+        <p>Mode choisi : <strong><?= ($mode_form === 'en_boutique') ? 'Paiement en boutique' : 'Paiement à la livraison' ?></strong></p>
+        <a href="../../index.php">Retour à l'accueil</a>
     </div>
 </body>
 

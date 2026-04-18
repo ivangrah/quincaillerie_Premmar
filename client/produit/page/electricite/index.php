@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cathegories</title>
+    <title>Electricite – PREMMAR</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -16,26 +16,24 @@
                 <nav>
                     <div class="align-nav">
                         <div class="skip">
-                            <img src="../electricite/image-electrique/logo0.png" class="afrique" alt="afrique">
+                            <img src="./image-electrique/logo0.png" class="afrique" alt="logo">
                             <p>PREMMAR PRODUIT</p>
                         </div>
                     </div>
                 </nav>
                 <nav>
-
                     <div class="block">
                         <div class="serach">
                             <input type="search" placeholder=" Recherche">
                         </div>
-
                     </div>
 
                     <div class="align-nav">
                         <ul>
-                            <a href="../page-accueil/index.html"> <i class="fa-solid fa-house"></i> Accueil</a>
-                            <a href="../boutique/index.html"> <i class="fa-solid fa-folder"></i> Cathegories</a>
-                            <a href="../page-accueil/index.html"> <i class="fa-solid fa-box"></i> Produit</a>
-                            <a href="../page-accueil/index.html"> <i class="fa-solid fa-shopping-cart"></i> Paniers</a>
+                            <a href="../../../../client/page-accueil/index.php"><i class="fa-solid fa-house"></i> Accueil</a>
+                            <a href="../../../../client/boutique/index.php"><i class="fa-solid fa-folder"></i> Catégories</a>
+                            <a href="#"><i class="fa-solid fa-box"></i> Produit</a>
+                            <a href="#"><i class="fa-solid fa-shopping-cart"></i> Paniers</a>
                         </ul>
                     </div>
 
@@ -45,22 +43,19 @@
         </div>
 
         <?php
-
         include_once "../../../../bd/config.php";
 
+        // ID de la catégorie Electricite = 1
+        $id_categorie = 1;
+
         try {
-
-            $connection = new PDO($dsn, $username, $password);
-            $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-
             $sql = "SELECT p.*, sc.nom_sous_categorie 
-                FROM PRODUIT p
-                INNER JOIN SOUS_CATEGORIE sc 
-                ON p.id_sous_categorie = sc.id_sous_categorie";
+                    FROM PRODUIT p
+                    INNER JOIN SOUS_CATEGORIE sc ON p.id_sous_categorie = sc.id_sous_categorie
+                    WHERE p.id_categorie = ?";
 
-            $statement = $connection->prepare($sql);
-            $statement->execute();
+            $statement = $pdo->prepare($sql);
+            $statement->execute([$id_categorie]);
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $error) {
             echo "<pre style='color:red; padding:20px;'>ERREUR : " . $error->getMessage() . "</pre>";
@@ -91,7 +86,6 @@
                                 <i class="fa-solid fa-folder"></i>
                                 <?= htmlspecialchars($produit['nom_sous_categorie']) ?>
                             </span>
-
 
                             <h3 class="carte-nom"><?= htmlspecialchars($produit['nom_produit']) ?></h3>
                             <p class="carte-desc"><?= htmlspecialchars($produit['description']) ?></p>

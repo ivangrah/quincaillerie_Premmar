@@ -23,30 +23,19 @@ try {
 <?php include 'header.php'; ?>
 <?php include 'cathe.css'; ?>
 
+
+
+
+
 <?php foreach ($result as $row) : ?>
-
-
-
-
     <div class="position">
-
-        <div class="encd">
-            <img src="../bd/catheimage/<?php echo htmlspecialchars($row["image"]); ?>">
-            <h3><?php echo htmlspecialchars($row["nom_categorie"]); ?></h3>
-
-        </div>
-
-
-
+        <a href="/projet_quincaillerie/<?= htmlspecialchars($row['lien']) ?>">
+            <div class="encd">
+                <img src="../bd/catheimage/<?= htmlspecialchars($row['image']) ?>">
+                <h3><?= htmlspecialchars($row['nom_categorie']) ?></h3>
+            </div>
+        </a>
     </div>
-
-
-
-
-
-
-
-
 <?php endforeach; ?>
 
 
