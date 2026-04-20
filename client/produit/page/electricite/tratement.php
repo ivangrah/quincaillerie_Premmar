@@ -49,13 +49,13 @@ $stmt_cmd = $pdo->prepare($sql_cmd);
 
 // On envoie les 6 valeurs correspondant aux 6 points d'interrogation
 $stmt_cmd->execute([
-$numero_cmd,
-$montant_total,
-$mode_pour_bd,
-$id_client,
-$id_produit,
-$quantite
-                ]);
+    $numero_cmd,
+    $montant_total,
+    $mode_pour_bd,
+    $id_client,
+    $id_produit,
+    $quantite
+]);
 $id_commande = $pdo->lastInsertId();
 
 // 5. VÉRIFICATION MONTANT MINIMUM GENIUSPAY
@@ -79,8 +79,8 @@ if ($mode_form === 'geniuspay') {
             "email" => $email,
             "phone" => $telephone
         ],
-        "success_url" => "http://localhost/projet_quincaillerie/client/produit/page/electricite/confirmation.php?id_cmd=" . $id_commande,
-        "error_url"   => "http://localhost/projet_quincaillerie/client/produit/page/electricite/commande.php?id=" . $id_produit
+        "success_url" => "http://premmar.infinityfreeapp.com/projet_quincaillerie/client/produit/page/electricite/confirmation.php?id_cmd=" . $id_commande,
+        "error_url"   => "http://premmar.infinityfreeapp.com/projet_quincaillerie/client/produit/page/electricite/commande.php?id=" . $id_produit
     ];
 
     $ch = curl_init($api_url);
@@ -125,15 +125,42 @@ ob_end_clean();
 <head>
     <meta charset="UTF-8">
     <title>Commande enregistrée</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="tratement.css">
 </head>
 
 <body>
-    <div style="text-align:center; margin-top:50px;">
-        <h1>Merci, <?= htmlspecialchars($nom) ?> !</h1>
-        <p>Votre commande <strong><?= $numero_cmd ?></strong> a bien été enregistrée.</p>
-        <p>Mode choisi : <strong><?= ($mode_form === 'en_boutique') ? 'Paiement en boutique' : 'Paiement à la livraison' ?></strong></p>
-        <a href="../../index.php">Retour à l'accueil</a>
+
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+
+                <div class="animated-card 
+                  p-5 
+                  text-center 
+                  bg-white 
+                  border border-success border-2 
+                  rounded-5 
+                  shadow-lg">
+
+
+                    <h1 class="text-success">Merci, <?= htmlspecialchars($nom) ?> !</h1>
+
+                    <p class="text-secondary">Votre commande <strong><?= $numero_cmd ?></strong> a bien été enregistrée.</p>
+                    <p class="text-secondary">Mode choisi : <strong><?= ($mode_form === 'en_boutique') ? 'Paiement en boutique' : 'Paiement à la livraison' ?></strong></p>
+
+                    <a href="/projet_quincaillerie/client/page-accueil/index.php"><button class="btn btn-success btn-lg px-5 shadow-sm"><i class="fa-solid fa-house"></i> Retour à l'accueil</button></a>
+
+                    </button>
+
+                </div>
+            </div>
+        </div>
     </div>
+
+
 </body>
 
 </html>

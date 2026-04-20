@@ -297,20 +297,16 @@ try {
         const prixTotal = document.getElementById('prix_total');
 
         function updatePrix() {
-            let totalProduits = prixUnitaire * quantite;
+            let totalProduits = parseFloat(prixUnitaire) * parseInt(quantite);
             let totalFinal = totalProduits;
 
-            // Appliquer les frais si le total est entre 0 et 5000 (selon ta logique)
             if (totalProduits > 0 && totalProduits <= 5000) {
                 totalFinal += FRAIS_LIVRAISON;
             } else {
-
                 totalFinal += FRAIS_MAXIMUM;
-
-
             }
 
-            prixTotal.textContent = totalFinal;
+            prixTotal.textContent = new Intl.NumberFormat('fr-FR').format(totalFinal) + " FCFA";
         }
 
         document.querySelector('.plus').addEventListener('click', () => {
@@ -343,7 +339,11 @@ try {
                 alert("Veuillez choisir un mode de paiement.");
             }
         });
+
+        // ✅ Appel au chargement de la page
+        updatePrix();
     </script>
+
 
 </body>
 

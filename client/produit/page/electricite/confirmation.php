@@ -97,7 +97,7 @@ ob_end_clean();
         </div>
 
         <h1>Paiement Réussi !</h1>
-        <p>Merci  <strong><?= htmlspecialchars($commande['nom_client']) ?></strong>, votre transaction a été validée.</p>
+        <p>Merci <strong><?= htmlspecialchars($commande['nom_client']) ?></strong>, votre transaction a été validée.</p>
 
         <div class="details">
             <p><strong>N° Commande</strong> <?= htmlspecialchars($commande['numero_commande']) ?></p>
@@ -112,7 +112,7 @@ ob_end_clean();
 
         <p>Un email de confirmation a été envoyé à l'administration.</p>
 
-        <a href="../../../../index.php" class="btn">
+        <a href="/projet_quincaillerie/client/produit/page/electricite/index.php" class="btn">
             <i class="fa-solid fa-arrow-left"></i> Retour à la boutique
         </a>
 

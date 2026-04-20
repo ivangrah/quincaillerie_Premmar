@@ -361,3 +361,35 @@ body {
         justify-content: center;
     }
 }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animated-card {
+    animation: fadeInUp 0.8s ease-out;
+    transition: transform 0.3s ease, shadow 0.3s ease;
+}
+
+/* Effet de survol (Hover) */
+.animated-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+a {
+    text-decoration: none;
+    color: gray;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.3s ease-in-out;
+}
+
