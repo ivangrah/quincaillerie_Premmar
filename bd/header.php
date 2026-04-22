@@ -35,8 +35,8 @@
                 <nav>
                     <div class="align-nav">
                         <ul>
-                            <li><a href="../page-accueil/index.html">Accueil</a></li>
-                            <li><a href="../boutique/index.html">Cathegories</a></li>
+                            <li><a href="../client/page-accueil/index.php">Accueil</a></li>
+                            <li><a href="../bd/cathegorie.php">Cathegories</a></li>
                             <li><a href="../page-accueil/index.html">Produit</a></li>
                             <li><a href="../page-accueil/index.html">Nos Prestations</a></li>
                         </ul>

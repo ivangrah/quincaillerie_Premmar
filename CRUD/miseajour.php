@@ -4,11 +4,12 @@ include_once "../bd/config.php";
 $success = null;
 $error = null;
 
-// Récupérer le produit à modifier
+// 1. Récupérer le produit à modifier
 $id_produit = (int)($_GET['id'] ?? 0);
 
 if ($id_produit === 0) {
-    die("Produit non spécifié.");
+    header("Location: liste.php");
+    exit;
 }
 
 $stmt = $pdo->prepare("SELECT * FROM PRODUIT WHERE id_produit = ?");
@@ -19,7 +20,7 @@ if (!$produit) {
     die("Produit introuvable.");
 }
 
-// Traitement du formulaire
+// 2. Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $nom               = trim($_POST['nom'] ?? '');
@@ -30,55 +31,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contenant         = trim($_POST['contenant'] ?? '');
     $id_categorie      = (int)($_POST['id_categorie'] ?? 0);
     $id_sous_categorie = (int)($_POST['id_sous_categorie'] ?? 0);
-    $nom_image         = $produit['image'];
 
-    // Nouvelle image uploadée ?
+    // Valeur par défaut : on garde l'image actuelle définie en BD
+    $nom_image = $produit['image'];
+    $upload_ok = true;
+
+    // 3. Gestion de l'image (seulement si un nouveau fichier est envoyé)
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $ext       = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-        $nom_image = strtolower(str_replace(' ', '_', $nom)) . '.' . $ext;
-        $dossier   = "../client/produit/images/" . $_POST['nom_dossier'] . "/";
 
-        if (!is_dir($dossier)) mkdir($dossier, 0755, true);
-        move_uploaded_file($_FILES['image']['tmp_name'], $dossier . $nom_image);
+        // Récupérer la catégorie pour le dossier
+        $stmt_cat = $pdo->prepare("SELECT nom_categorie FROM CATEGORIE WHERE id_categorie = ?");
+        $stmt_cat->execute([$id_categorie]);
+        $cat = $stmt_cat->fetch(PDO::FETCH_ASSOC);
+
+        // Nettoyage sécurisé du nom de dossier
+        $nom_dossier = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $cat['nom_categorie'] ?? 'divers'));
+
+        // Nettoyage sécurisé du nom de fichier
+        $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+        $nom_image = strtolower(preg_replace('/[^A-Za-z0-9]/', '_', $nom)) . '_' . time() . '.' . $ext;
+
+        // Chemin physique absolu pour Linux/XAMPP
+        $chemin_relatif = "/projet_quincaillerie/client/produit/images/" . $nom_dossier . "/";
+        $dossier_physique = $_SERVER['DOCUMENT_ROOT'] . $chemin_relatif;
+
+        // Création du dossier si inexistant
+        if (!is_dir($dossier_physique)) {
+            if (!mkdir($dossier_physique, 0755, true)) {
+                $error = "Erreur : Impossible de créer le dossier de destination.";
+                $upload_ok = false;
+            }
+        }
+
+        // Déplacement du fichier
+        if ($upload_ok) {
+            if (!move_uploaded_file($_FILES['image']['tmp_name'], $dossier_physique . $nom_image)) {
+                $error = "L'image n'a pas pu être déplacée. Vérifiez les permissions du dossier.";
+                $upload_ok = false;
+            }
+        }
     }
 
-    try {
-        // Mise à jour PRODUIT
-        $stmt = $pdo->prepare("
-            UPDATE PRODUIT 
-            SET nom_produit = ?, description = ?, prix = ?, `prix-gros` = ?, quantité = ?, 
-                image = ?, contenant = ?, id_sous_categorie = ?, id_categorie = ?
-            WHERE id_produit = ?
-        ");
-        $stmt->execute([
-            $nom,
-            $description,
-            $prix,
-            $prix_gros,
-            $quantite,
-            $nom_image,
-            $contenant,
-            $id_sous_categorie,
-            $id_categorie,
-            $id_produit
-        ]);
+    // 4. Mise à jour en BD seulement si l'upload est validé
+    if ($upload_ok) {
+        try {
+            $stmt = $pdo->prepare("
+                UPDATE PRODUIT 
+                SET nom_produit = ?, description = ?, prix = ?, `prix-gros` = ?, quantité = ?, 
+                    image = ?, contenant = ?, id_sous_categorie = ?, id_categorie = ?
+                WHERE id_produit = ?
+            ");
+            $stmt->execute([
+                $nom,
+                $description,
+                $prix,
+                $prix_gros,
+                $quantite,
+                $nom_image,
+                $contenant,
+                $id_sous_categorie,
+                $id_categorie,
+                $id_produit
+            ]);
 
-        // ✅ Mise à jour du prix dans type_produit aussi
-        $pdo->prepare("UPDATE type_produit SET prix = ?, prix_gros = ? WHERE id_produit = ?")
-            ->execute([$prix, $prix_gros, $id_produit]);
+            // Mise à jour synchrone du prix (si ta table type_produit existe toujours)
+            $pdo->prepare("UPDATE type_produit SET prix = ?, prix_gros = ? WHERE id_produit = ?")
+                ->execute([$prix, $prix_gros, $id_produit]);
 
-        $success = "Produit \"$nom\" mis à jour avec succès !";
+            $success = "Produit \"$nom\" mis à jour avec succès !";
 
-        // Recharge les données mises à jour
-        $stmt2 = $pdo->prepare("SELECT * FROM PRODUIT WHERE id_produit = ?");
-        $stmt2->execute([$id_produit]);
-        $produit = $stmt2->fetch(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        $error = "Erreur BD : " . $e->getMessage();
+            // Rafraîchir les données pour l'affichage
+            $stmt2 = $pdo->prepare("SELECT * FROM PRODUIT WHERE id_produit = ?");
+            $stmt2->execute([$id_produit]);
+            $produit = $stmt2->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $error = "Erreur BD : " . $e->getMessage();
+        }
     }
 }
 
-// Catégories et sous-catégories
 $categories      = $pdo->query("SELECT * FROM CATEGORIE")->fetchAll(PDO::FETCH_ASSOC);
 $sous_categories = $pdo->query("SELECT * FROM SOUS_CATEGORIE")->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -109,6 +140,15 @@ $sous_categories = $pdo->query("SELECT * FROM SOUS_CATEGORIE")->fetchAll(PDO::FE
         .btn-warning {
             background: linear-gradient(135deg, #f97316, #fbbf24);
             border: none;
+            color: white !important;
+        }
+
+        .preview-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
         }
     </style>
 </head>
@@ -117,76 +157,58 @@ $sous_categories = $pdo->query("SELECT * FROM SOUS_CATEGORIE")->fetchAll(PDO::FE
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
-
-                <h1 class="text-center mb-4">
-                    <i class="fa-solid fa-pen-to-square"></i> Modifier un produit
-                </h1>
+                <h1 class="text-center mb-4"><i class="fa-solid fa-pen-to-square"></i> Modifier un produit</h1>
 
                 <?php if ($success): ?>
-                    <div class="alert alert-success"><i class="fa-solid fa-check"></i> <?= $success ?></div>
+                    <div class="alert alert-success"> <?= $success ?></div>
                 <?php endif; ?>
                 <?php if ($error): ?>
-                    <div class="alert alert-danger"><i class="fa-solid fa-triangle-exclamation"></i> <?= $error ?></div>
+                    <div class="alert alert-danger"> <?= $error ?></div>
                 <?php endif; ?>
 
                 <div class="card p-4">
                     <form method="POST" enctype="multipart/form-data">
-
                         <div class="mb-3">
-                            <label class="form-label">Nom du produit</label>
-                            <input type="text" name="nom" class="form-control"
-                                value="<?= htmlspecialchars($produit['nom_produit']) ?>" required>
+                            <label class="form-label fw-bold">Nom du produit</label>
+                            <input type="text" name="nom" class="form-control" value="<?= htmlspecialchars($produit['nom_produit']) ?>" required>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Description</label>
+                            <label class="form-label fw-bold">Description</label>
                             <textarea name="description" class="form-control" rows="3"><?= htmlspecialchars($produit['description']) ?></textarea>
                         </div>
 
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Prix (FCFA)</label>
-                                <input type="number" name="prix" class="form-control"
-                                    value="<?= $produit['prix'] ?>" required>
+                                <label class="form-label fw-bold">Prix (FCFA)</label>
+                                <input type="number" name="prix" class="form-control" value="<?= $produit['prix'] ?>" required>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Prix gros (FCFA)</label>
-                                <input type="number" name="prix_gros" class="form-control"
-                                    value="<?= $produit['prix-gros'] ?>">
+                                <label class="form-label fw-bold">Prix gros</label>
+                                <input type="number" name="prix_gros" class="form-control" value="<?= $produit['prix-gros'] ?>">
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Quantité</label>
-                                <input type="number" name="quantite" class="form-control"
-                                    value="<?= $produit['quantité'] ?>" required>
+                                <label class="form-label fw-bold">Quantité</label>
+                                <input type="number" name="quantite" class="form-control" value="<?= $produit['quantité'] ?>" required>
                             </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Contenant</label>
-                            <input type="text" name="contenant" class="form-control"
-                                value="<?= htmlspecialchars($produit['contenant']) ?>">
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Catégorie</label>
+                                <label class="form-label fw-bold">Catégorie</label>
                                 <select name="id_categorie" class="form-select" required>
-                                    <option value="">-- Choisir --</option>
                                     <?php foreach ($categories as $cat): ?>
-                                        <option value="<?= $cat['id_categorie'] ?>"
-                                            <?= $cat['id_categorie'] == $produit['id_categorie'] ? 'selected' : '' ?>>
+                                        <option value="<?= $cat['id_categorie'] ?>" <?= $cat['id_categorie'] == $produit['id_categorie'] ? 'selected' : '' ?>>
                                             <?= htmlspecialchars($cat['nom_categorie']) ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Sous-catégorie</label>
+                                <label class="form-label fw-bold">Sous-catégorie</label>
                                 <select name="id_sous_categorie" class="form-select" required>
-                                    <option value="">-- Choisir --</option>
                                     <?php foreach ($sous_categories as $sc): ?>
-                                        <option value="<?= $sc['id_sous_categorie'] ?>"
-                                            <?= $sc['id_sous_categorie'] == $produit['id_sous_categorie'] ? 'selected' : '' ?>>
+                                        <option value="<?= $sc['id_sous_categorie'] ?>" <?= $sc['id_sous_categorie'] == $produit['id_sous_categorie'] ? 'selected' : '' ?>>
                                             <?= htmlspecialchars($sc['nom_sous_categorie']) ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -194,28 +216,33 @@ $sous_categories = $pdo->query("SELECT * FROM SOUS_CATEGORIE")->fetchAll(PDO::FE
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Dossier image</label>
-                            <input type="text" name="nom_dossier" class="form-control" placeholder="Ex: plomberie">
-                            <?php if ($produit['image']): ?>
-                                <small class="text-muted">Image actuelle : <?= htmlspecialchars($produit['image']) ?></small>
-                            <?php endif; ?>
-                        </div>
-
                         <div class="mb-4">
-                            <label class="form-label">Nouvelle image (optionnel)</label>
+                            <label class="form-label fw-bold">Image du produit</label>
+                            <div class="d-flex align-items-center gap-3 mb-3 p-2 bg-light rounded">
+                                <?php
+                                // Déterminer le dossier actuel pour l'affichage de l'ancienne image
+                                $stmt_c = $pdo->prepare("SELECT nom_categorie FROM CATEGORIE WHERE id_categorie = ?");
+                                $stmt_c->execute([$produit['id_categorie']]);
+                                $cat_info = $stmt_c->fetch();
+                                $folder_name = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $cat_info['nom_categorie'] ?? 'divers'));
+                                $img_src = "/projet_quincaillerie/client/produit/images/$folder_name/" . $produit['image'];
+                                ?>
+                                <img src="<?= $img_src ?>" class="preview-img" alt="Actuelle" onerror="this.src='https://placehold.co/80?text=Pas+d\'image'">
+                                <div>
+                                    <small class="text-muted d-block">Image actuelle :</small>
+                                    <code class="small"><?= htmlspecialchars($produit['image']) ?></code>
+                                </div>
+                            </div>
                             <input type="file" name="image" class="form-control" accept="image/*">
+                            <div class="form-text">Sélectionnez un fichier uniquement si vous souhaitez changer l'image.</div>
                         </div>
 
                         <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-warning w-100 py-2 text-white fw-bold">
-                                <i class="fa-solid fa-floppy-disk"></i> Mettre à jour
+                            <button type="submit" class="btn btn-warning w-100 py-2 fw-bold">
+                                <i class="fa-solid fa-floppy-disk"></i> Enregistrer les modifications
                             </button>
-                            <a href="liste_produits.php" class="btn btn-secondary w-100 py-2 fw-bold">
-                                <i class="fa-solid fa-arrow-left"></i> Retour
-                            </a>
+                            <a href="liste.php" class="btn btn-secondary w-100 py-2 fw-bold">Retour</a>
                         </div>
-
                     </form>
                 </div>
             </div>

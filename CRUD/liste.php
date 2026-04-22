@@ -1,5 +1,14 @@
 <?php
+
 include_once "../bd/config.php";
+
+
+session_start();
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header('Location: liste.php');
+    exit;
+}
+
 
 // Message de suppression réussie
 $supprime = isset($_GET['supprime']) && $_GET['supprime'] == 1;
@@ -84,7 +93,7 @@ $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- En-tête -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="fa-solid fa-box"></i> Gestion des produits</h1>
-            <a href="ajouter_produit.php" class="btn btn-ajouter text-white fw-bold px-4 py-2">
+            <a href="ajouter.php" class="btn btn-ajouter text-white fw-bold px-4 py-2">
                 <i class="fa-solid fa-plus"></i> Ajouter un produit
             </a>
         </div>

@@ -1,3 +1,5 @@
+
+
 <?php
 ob_start();
 
@@ -10,8 +12,23 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
-include_once "../../../../bd/config.php";
+include_once "../../../../bd/config.php";  // ← $pdo créé ici
 include_once "config_secret.php";
+
+// 🔍 DEBUG TEMPORAIRE — À SUPPRIMER APRÈS
+$id_recu = isset($_GET['id_cmd']) ? (int)$_GET['id_cmd'] : 'ABSENT';
+
+$dbg = $pdo->prepare("SELECT id_commande, numero_commande, montant_total, statut_commande FROM COMMANDE WHERE id_commande = ?");
+$dbg->execute([$id_recu]);
+$row = $dbg->fetch(PDO::FETCH_ASSOC);
+
+echo "<pre style='background:#111;color:#0f0;padding:16px;font-size:13px'>";
+echo "id_cmd reçu en URL  : " . $id_recu . "\n";
+echo "Ligne trouvée en BDD : "; print_r($row);
+echo "</pre>";
+die();
+
+// ... reste du fichier inchangé
 
 $id_commande = isset($_GET['id_cmd']) ? (int)$_GET['id_cmd'] : 0;
 
@@ -38,6 +55,17 @@ try {
 
         $update = $pdo->prepare("UPDATE COMMANDE SET statut_commande = 'payee' WHERE id_commande = ?");
         $update->execute([$id_commande]);
+
+        // ✅ Recharger la commande après la mise à jour pour avoir les données fraîches
+        $stmt2 = $pdo->prepare("
+            SELECT c.*, cl.email, cl.nom as nom_client, p.nom_produit
+            FROM COMMANDE c 
+            JOIN CLIENT cl ON c.id_client = cl.id_client 
+            LEFT JOIN PRODUIT p ON c.id_produit = p.id_produit
+            WHERE c.id_commande = ?
+        ");
+        $stmt2->execute([$id_commande]);
+        $commande = $stmt2->fetch(PDO::FETCH_ASSOC);
 
         $mail = new PHPMailer(true);
 
@@ -105,6 +133,7 @@ ob_end_clean();
             <p><strong>Produit</strong> <?= htmlspecialchars($commande['nom_produit'] ?? 'Produit non spécifié') ?></p>
             <p><strong>Quantité</strong> <?= htmlspecialchars($commande['quantite'] ?? '1') ?></p>
             <hr>
+            <!-- ✅ montant_total lu directement depuis la BDD : toujours correct -->
             <p><strong>Montant payé</strong> <span class="montant"><?= number_format($commande['montant_total'], 0, ',', ' ') ?> FCFA</span></p>
             <p><strong>Statut</strong> <span class="statut-ok">Confirmé (Payé)</span></p>
             <p><strong>Date</strong> <?= date('d/m/Y à H:i', strtotime($commande['date_commande'])) ?></p>

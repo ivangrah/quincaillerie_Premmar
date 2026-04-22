@@ -30,10 +30,10 @@
 
                     <div class="align-nav">
                         <ul>
-                            <a href="../../../../client/page-accueil/index.php"><i class="fa-solid fa-house"></i> Accueil</a>
-                            <a href="../../../../client/boutique/index.php"><i class="fa-solid fa-folder"></i> Catégories</a>
-                            <a href="#"><i class="fa-solid fa-box"></i> Produit</a>
-                            <a href="#"><i class="fa-solid fa-shopping-cart"></i> Paniers</a>
+                            <a href="../../../page-accueil/index.php"><i class="fa-solid fa-house"></i> Accueil</a>
+                            <a href="../../../../bd/cathegorie.php"><i class="fa-solid fa-folder"></i> Catégories</a>
+                            <a href="../electricite/index.php"><i class="fa-solid fa-box"></i> Produit</a>
+                            <a href="../electricite/commande.php"><i class="fa-solid fa-shopping-cart"></i> Paniers</a>
                         </ul>
                     </div>
 

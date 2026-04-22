@@ -20,7 +20,7 @@ if (!$produit) {
 if (isset($_POST['confirmer'])) {
     try {
         $pdo->prepare("DELETE FROM PRODUIT WHERE id_produit = ?")->execute([$id_produit]);
-        header("Location: liste_produits.php?supprime=1");
+        header("Location: liste.php?supprime=1");
         exit;
     } catch (PDOException $e) {
         $error = "Erreur : " . $e->getMessage();
