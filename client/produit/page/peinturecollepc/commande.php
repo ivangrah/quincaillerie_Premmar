@@ -66,7 +66,7 @@ $montant_initial = $prix_initial + $frais_initial;
 
         <ul class="navbar-links">
             <li><a href="../../../../index.php"><i class="fa-solid fa-house"></i> Accueil</a></li>
-            <li><a href="../electricite/index.php"><i class="fa-solid fa-plug"></i>electricite</a></li>
+            <li><a href="../peinturecollepc/index.php"><i class="fa-solid fa-plug"></i>electricite</a></li>
             <li><a href="#" class="active"><i class="fa-solid fa-cart-shopping"></i> Commande</a></li>
         </ul>
 
@@ -78,7 +78,7 @@ $montant_initial = $prix_initial + $frais_initial;
     <!--══════════ MENU MOBILE ══════════-->
     <div class="nav-mobile" id="navMobile">
         <a href="../../../../index.php"><i class="fa-solid fa-house"></i> Accueil</a>
-        <a href="../electricite/index.php"><i class="fa-solid fa-plug"></i>electricite</a>
+        <a href="../peinturecollepc/index.php"><i class="fa-solid fa-plug"></i>electricite</a>
         <a href="#" class="active"><i class="fa-solid fa-cart-shopping"></i> Commande</a>
     </div>
 
@@ -97,7 +97,7 @@ $montant_initial = $prix_initial + $frais_initial;
 
                 <!-- Image produit -->
                 <div class="prod-image-wrap">
-                    <img src="../../../produit/images/serrurerie/<?= htmlspecialchars($produit['image']) ?>"
+                    <img src="../../../produit/images/peinturecollepc/<?= htmlspecialchars($produit['image']) ?>"
                         alt="<?= htmlspecialchars($produit['nom_produit']) ?>">
                 </div>
 

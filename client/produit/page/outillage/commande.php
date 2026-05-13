@@ -13,17 +13,15 @@ if ($id_produit === 0) {
     die("<p style='color:red'>Produit introuvable.</p>");
 }
 
+// ✅ On utilise directement $pdo fourni par config.php — pas de double connexion
 try {
-    $connection = new PDO($dsn, $username, $password);
-    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     $sql = "SELECT p.*, sc.nom_sous_categorie
             FROM PRODUIT p
             INNER JOIN SOUS_CATEGORIE sc 
             ON p.id_sous_categorie = sc.id_sous_categorie
             WHERE p.id_produit = :id";
 
-    $stmt = $connection->prepare($sql);
+    $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $id_produit]);
     $produit = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -31,13 +29,18 @@ try {
         die("<p style='color:red'>Produit introuvable.</p>");
 
     $sql2 = "SELECT * FROM type_produit WHERE id_produit = :id";
-    $stmt2 = $connection->prepare($sql2);
+    $stmt2 = $pdo->prepare($sql2);
     $stmt2->execute([':id' => $id_produit]);
     $types = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $error) {
     echo "<pre style='color:red'>ERREUR : " . htmlspecialchars($error->getMessage()) . "</pre>";
     die();
 }
+
+// ✅ FIX Bug 2 : Calcul du montant initial côté PHP pour initialiser le champ caché
+$prix_initial    = count($types) > 0 ? (float)$types[0]['prix'] : (float)$produit['prix'];
+$frais_initial   = ($prix_initial > 0 && $prix_initial <= 5000) ? 2000 : ($prix_initial > 5000 ? 5000 : 0);
+$montant_initial = $prix_initial + $frais_initial;
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -63,7 +66,7 @@ try {
 
         <ul class="navbar-links">
             <li><a href="../../../../index.php"><i class="fa-solid fa-house"></i> Accueil</a></li>
-            <li><a href="../outillage/index.php"><i class="fa-solid fa-plug"></i>outillage</a></li>
+            <li><a href="../electricite/index.php"><i class="fa-solid fa-plug"></i>electricite</a></li>
             <li><a href="#" class="active"><i class="fa-solid fa-cart-shopping"></i> Commande</a></li>
         </ul>
 
@@ -72,10 +75,10 @@ try {
         </button>
     </nav>
 
-    <!-- ══════════ MENU MOBILE ══════════ -->
+    <!--══════════ MENU MOBILE ══════════-->
     <div class="nav-mobile" id="navMobile">
         <a href="../../../../index.php"><i class="fa-solid fa-house"></i> Accueil</a>
-        <a href="../outillage/index.php"><i class="fa-solid fa-plug"></i>electricite</a>
+        <a href="../electricite/index.php"><i class="fa-solid fa-plug"></i>electricite</a>
         <a href="#" class="active"><i class="fa-solid fa-cart-shopping"></i> Commande</a>
     </div>
 
@@ -98,7 +101,7 @@ try {
                         alt="<?= htmlspecialchars($produit['nom_produit']) ?>">
                 </div>
 
-                <!-- Nom produit -->
+                <!--Nom produit -->
                 <p class="prod-title"><?= htmlspecialchars($produit['nom_produit']) ?></p>
                 <p class="prod-sub">Sélectionner un type</p>
 
@@ -137,23 +140,17 @@ try {
                     </div>
                 </div>
 
-                <!-- Prix total -->
+                <!-- ✅ FIX Bug 1 : Affichage initial vide, le JS recalcule immédiatement -->
                 <div class="prix-total-wrap">
                     <span class="prix-total-label">Total</span>
-                    <span id="prix_total">
-                        <?= number_format(
-                            count($types) > 0 ? $types[0]['prix'] : $produit['prix'],
-                            0,
-                            ',',
-                            ' '
-                        ) ?> FCFA
-                    </span>
+                    <span id="prix_total">Chargement…</span>
                 </div>
 
                 <!-- Champs cachés -->
                 <input type="hidden" name="id_produit" value="<?= (int)$produit['id_produit'] ?>">
                 <input type="hidden" name="quantite" id="quantite_hidden" value="1">
-                <input type="hidden" id="prix_total_hidden" name="prix_total_final" value="0">
+                <!-- ✅ FIX Bug 2 : Valeur initiale calculée côté PHP, plus de "0" envoyé -->
+                <input type="hidden" id="prix_total_hidden" name="prix_total_final" value="<?= $montant_initial ?>">
 
                 <!-- Bouton confirmer -->
                 <div class="btn">
@@ -249,6 +246,7 @@ try {
                         </label>
 
                         <label class="pay-option">
+                            <!-- ✅ FIX Bug 3 : on écoute le changement de mode pour recalculer les frais -->
                             <input type="radio" name="mode_paiement" value="en_boutique">
                             <div class="pay-icon"><i class="fa-solid fa-store"></i></div>
                             <div class="pay-info">
@@ -256,9 +254,7 @@ try {
                                 <small>Venez régler directement en magasin</small>
                                 <small>ADRESSE DU MAGASIN : ANGRE DJOROGOBITE 2 PRES
                                     DU PETIT MARCHE</small>
-                                </small>
                             </div>
-
                         </label>
 
                     </div>
@@ -295,24 +291,30 @@ try {
 
         const quantiteSpan = document.getElementById('quantite');
         const quantiteHidden = document.getElementById('quantite_hidden');
-        const prixTotal = document.getElementById('prix_total');
+        const prixTotalSpan = document.getElementById('prix_total');
 
+        // ✅ FIX Bug 3 : fonction updatePrix tient compte du mode de paiement
         function updatePrix() {
-            let totalProduits = parseFloat(prixUnitaire) * parseInt(quantite);
+            const totalProduits = parseFloat(prixUnitaire) * parseInt(quantite);
+            const modeSelectionne = document.querySelector('input[name="mode_paiement"]:checked')?.value;
+
             let frais = 0;
 
-            if (totalProduits > 0 && totalProduits <= 5000) {
-                frais = FRAIS_LIVRAISON; // 2 000 FCFA
-            } else if (totalProduits > 5000) {
-                frais = FRAIS_MAXIMUM; // 5 000 FCFA
+            // Frais de livraison uniquement si paiement avant ou après livraison (pas en boutique)
+            if (modeSelectionne !== 'en_boutique') {
+                if (totalProduits > 0 && totalProduits <= 5000) {
+                    frais = FRAIS_LIVRAISON; // 2 000 FCFA
+                } else if (totalProduits > 5000) {
+                    frais = FRAIS_MAXIMUM; // 5 000 FCFA
+                }
             }
-            // Si totalProduits = 0, frais reste 0 (plus de bug ici)
 
-            let totalFinal = totalProduits + frais;
+            const totalFinal = totalProduits + frais;
 
-            prixTotal.textContent = new Intl.NumberFormat('fr-FR').format(totalFinal) + " FCFA";
+            // ✅ FIX Bug 1 : affichage toujours mis à jour par le JS
+            prixTotalSpan.textContent = new Intl.NumberFormat('fr-FR').format(totalFinal) + " FCFA";
 
-            // ✅ Synchronise le champ caché pour le serveur
+            // ✅ FIX Bug 2 : champ caché toujours synchronisé avec la vraie valeur
             document.getElementById('prix_total_hidden').value = totalFinal;
         }
 
@@ -338,6 +340,12 @@ try {
                 updatePrix();
             });
         });
+
+        // ✅ FIX Bug 3 : recalcul quand le mode de paiement change
+        document.querySelectorAll('input[name="mode_paiement"]').forEach(radio => {
+            radio.addEventListener('change', updatePrix);
+        });
+
         // ── Validation ──
         document.getElementById('commandeForm').addEventListener('submit', function(e) {
             const mode = document.querySelector('input[name="mode_paiement"]:checked');
@@ -347,10 +355,9 @@ try {
             }
         });
 
-        // ✅ Appel au chargement de la page
+        // ✅ Appel au chargement de la page pour afficher le bon montant dès le début
         updatePrix();
     </script>
-
 
 </body>
 

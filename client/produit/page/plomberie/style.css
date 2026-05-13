@@ -563,6 +563,13 @@ a:focus {
         line-height: 1.5;
     }
 
+    p {
+
+        font-size: 32px;
+
+
+    }
+
 }
 
 
@@ -696,4 +703,11 @@ a:focus {
     overflow: hidden;
     text-overflow: ellipsis;
     line-clamp: 3;
+}
+
+p {
+
+    font-size: 18px;
+
+
 }

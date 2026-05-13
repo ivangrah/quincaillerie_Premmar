@@ -22,14 +22,9 @@
             
                             <img src="/bd/catheimage/logo0.png" class="afrique" alt="afrique">
                             <p> PREMMAR BOUTIQUES</p><br><br>
-            
-            
                         </div>
-            
-                     
                     </div>
                 </nav>
-
                 <nav>
                     <div class="align-nav">
                        <ul>
@@ -41,15 +36,10 @@
                         </div>
                         <div class="block">
                             <div class="serach">
-
                                 <input type="search" placeholder=" recherche" >
-
                             </div>
                             <h1>BIENVENUE SUR PREMMAR BOUTIQUES </h1>
-
-                            <h2>NOS CATHEGORIES D'ARTICLES</h2>
-                         
-                        
+                            <h2>NOS CATHEGORIES D'ARTICLES</h2>     
 <div class="gallery">
     <div class="panel active" onclick="activate(this)" >
         <a href="/client/produit/electricite/index.html"><img src="../boutique/image/electriques.jpg" alt="electricite" class="image"></a>
@@ -102,9 +92,7 @@
         function activate(el) {
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             el.classList.add('active');
-        }
-
-        
+        }  
     </script>
     
 </body>

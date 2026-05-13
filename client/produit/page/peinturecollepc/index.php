@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plomberie PREMMAR</title>
+    <title>Electricite – PREMMAR</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -30,14 +30,14 @@
 
                     <div class="align-nav">
                         <ul>
-                            <a href="../../../../client/page-accueil/index.php"><i class="fa-solid fa-house"></i> Accueil</a>
-                            <a href="../../../../bd/cathegorie.php class="fa-solid fa-folder"></i> Catégories</a>
-                            <a href="#"><i class="fa-solid fa-box"></i> Produit</a>
-                            <a href=""><i class="fa-solid fa-shopping-cart"></i> Paniers</a>
+                            <a href="../../../page-accueil/index.php"><i class="fa-solid fa-house"></i> Accueil</a>
+                            <a href="../../../../bd/cathegorie.php"><i class="fa-solid fa-folder"></i> Catégories</a>
+                            <a href="../peinturecollepc/index.php"><i class="fa-solid fa-box"></i> Produit</a>
+                            <a href="../peinturecollepc/commande.php"><i class="fa-solid fa-shopping-cart"></i> Paniers</a>
                         </ul>
                     </div>
 
-                    <h1 style="margin-top: 70px;">PLOMBERIE</h1>
+                    <h1 style="margin-top: 70px;">PEINTURE COLLE ET PRODUIT CHIMIQUE</h1>
                 </nav>
             </header>
         </div>
@@ -46,7 +46,7 @@
         include_once "../../../../bd/config.php";
 
         // ID de la catégorie Electricite = 1
-        $id_categorie = 2;
+        $id_categorie = 5;
 
         try {
             $sql = "SELECT p.*, sc.nom_sous_categorie 
@@ -76,7 +76,7 @@
                     <div class="carte">
 
                         <div class="carte-image">
-                            <img src="../../images/plomberie/<?= htmlspecialchars($produit['image']) ?>"
+                            <img src="../../images/peinturecollepc/<?= htmlspecialchars($produit['image']) ?>"
                                 alt="<?= htmlspecialchars($produit['nom_produit']) ?>">
                         </div>
 

@@ -201,7 +201,7 @@ $sous_categories = $pdo->query("SELECT * FROM SOUS_CATEGORIE")->fetchAll(PDO::FE
                                         <option value="<?= $cat['id_categorie'] ?>" <?= $cat['id_categorie'] == $produit['id_categorie'] ? 'selected' : '' ?>>
                                             <?= htmlspecialchars($cat['nom_categorie']) ?>
                                         </option>
-                                    <?php endforeach; ?>
+                                    <?php endforeach; ?>$
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
