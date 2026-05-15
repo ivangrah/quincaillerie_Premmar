@@ -182,7 +182,7 @@ ob_end_clean();
                     <p class="text-secondary">Votre commande <strong><?= $numero_cmd ?></strong> a bien été enregistrée.</p>
                     <p class="text-secondary">Mode choisi :
                         <strong>
-                            <?= match ($mode_form) {
+                            <?= match ($mode_form){
                                 'geniuspay'       => 'Paiement avant livraison (GeniusPay)',
                                 'en_boutique'     => 'Paiement en boutique',
                                 'apres_livraison' => 'Paiement à la livraison',
@@ -200,6 +200,6 @@ ob_end_clean();
             </div>
         </div>
     </div>
-</body>
+  </body>
 
 </html>

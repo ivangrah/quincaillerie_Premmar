@@ -89,7 +89,8 @@
 
   <div class="prestations-grid">
 
-    <div class="prest-card reveal">
+  <a href="../page-accueil/prestation/BTA/index.php" style="text-decoration: none;">
+       <div class="prest-card reveal">
       <div class="prest-icon">
         <svg viewBox="0 0 24 24"><path d="M13 2 L13 9 L20 9"/><polyline points="3 17 9 11 13 15 21 7"/></svg>
       </div>
@@ -97,13 +98,23 @@
       <p>Étude, réalisation et maintenance de réseaux électriques basse et haute tension, câblage et armoires.</p>
     </div>
 
-    <div class="prest-card reveal">
+  </a>
+
+ 
+<a href="../page-accueil/prestation/panneaux solaires/index.php" style="text-decoration: none;">
+
+ <div class="prest-card reveal">
       <div class="prest-icon">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
       </div>
       <h3>Panneaux Solaires</h3>
       <p>Installation et maintenance de systèmes photovoltaïques pour l'habitat et l'industrie.</p>
     </div>
+  
+</a>
+   
+
+<a href="../page-accueil/prestation/froid et climatisation/index.php" style="text-decoration: none;">
 
     <div class="prest-card reveal">
       <div class="prest-icon">
@@ -113,7 +124,10 @@
       <p>Installation, entretien et dépannage de systèmes de climatisation résidentiels et industriels.</p>
     </div>
 
-    <div class="prest-card reveal">
+</a>
+
+<a href="../page-accueil/prestation/plomberie/index.php" style="text-decoration: none;">
+     <div class="prest-card reveal">
       <div class="prest-icon">
         <svg viewBox="0 0 24 24"><path d="M12 22a7 7 0 007-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 007 7z"/></svg>
       </div>
@@ -121,14 +135,19 @@
       <p>Travaux de plomberie sanitaire, installation et réparation de réseaux d'eau et d'assainissement.</p>
     </div>
 
-    <div class="prest-card reveal">
+</a>
+
+<a href="../page-accueil/prestation/carrellage et peinture/index.php" style="text-decoration: none;">
+      <div class="prest-card reveal">
       <div class="prest-icon">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
       </div>
       <h3>Carrelage & Peinture</h3>
       <p>Pose de carrelage, revêtements muraux et travaux de peinture intérieure et extérieure.</p>
     </div>
-
+</a>
+ 
+<a href="../page-accueil/prestation/maintenance industrielle/index.php" style="text-decoration: none;">
     <div class="prest-card reveal">
       <div class="prest-icon">
         <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -136,6 +155,9 @@
       <h3>Maintenance Industrielle</h3>
       <p>Contrats de maintenance préventive et corrective pour équipements industriels et infrastructures.</p>
     </div>
+
+</a>
+  
 
   </div>
 

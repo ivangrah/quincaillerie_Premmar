@@ -1,0 +1,369 @@
+/* --- RESET & VARIABLES (IDENTIQUES ACCUEIL) --- */
+:root {
+    --black: #1a1a1a;
+    --dark-grey: #4a4a4a;
+    --light-grey: #f9f9f9;
+    --white: #ffffff;
+    --border-color: #e5e5e5;
+    --gold-hover: #da9517;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--black);
+    background-color: var(--white);
+    line-height: 1.7;
+    /* Interligne légèrement augmenté pour la lecture */
+    padding-top: 90px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: 'Bodoni Moda', serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s;
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* --- HEADER FIXE (COPIÉ-COLLÉ EXACT DE L'ACCUEIL) --- */
+header {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20vh;
+    background-color: var(--white);
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 60px;
+    padding-bottom: 90px;
+
+
+}
+
+.logo {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 5.5rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--gold-hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+}
+
+
+
+/* Ajout d'une classe 'active' pour le lien de la page courante */
+nav a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--black);
+}
+
+nav a:hover::after {
+    width: 100%;
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    height: 1px;
+    background: var(--black);
+    transition: 0.3s;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.header-contact {
+    text-align: right;
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.phone-number {
+    font-weight: 600;
+    display: block;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+    border-left: 1px solid #ddd;
+    padding-left: 20px;
+}
+
+.social-icon svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--black);
+    transition: 0.3s;
+}
+
+.social-icon:hover svg {
+    fill: var(--gold-hover);
+    transform: translateY(-2px);
+}
+
+/* --- PAGE HERO (Spécifique à cette page) --- */
+.page-hero {
+    height: 50vh;
+    /* Moins haut que l'accueil */
+    width: 100%;
+    position: relative;
+    background: #000;
+    overflow: hidden;
+}
+
+.page-hero img {
+    opacity: 0.6;
+    object-position: center;
+}
+
+.page-hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--white);
+}
+
+.page-title {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 300;
+}
+
+/* --- CONTENU PRESTATIONS (Structure Alternée) --- */
+.services-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.service-block {
+    display: flex;
+    min-height: 600px;
+    /* Hauteur minimale pour l'impact visuel */
+}
+
+/* Pour alterner l'ordre image/texte */
+.service-block.reverse {
+    flex-direction: row-reverse;
+}
+
+.service-visual {
+    flex: 1;
+    height: auto;
+}
+
+.service-content {
+    flex: 1;
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--white);
+}
+
+.service-block.reverse .service-content {
+    background: var(--light-grey);
+    /* Fond gris clair pour les blocs alternés */
+}
+
+.service-heading {
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+/* Petit trait doré sous les titres */
+.service-heading::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 2px;
+    background: var(--gold-hover);
+    margin-top: 15px;
+}
+
+.service-description {
+    margin-bottom: 40px;
+    color: var(--dark-grey);
+    max-width: 500px;
+}
+
+/* Listes détaillées */
+.detailed-list {
+    margin-left: 20px;
+}
+
+.detailed-list li {
+    margin-bottom: 15px;
+    font-weight: 500;
+    color: var(--black);
+}
+
+.detailed-list li span {
+    display: block;
+    font-weight: 300;
+    font-size: 0.9rem;
+    color: var(--dark-grey);
+    margin-top: 5px;
+}
+
+/* --- SECTION CTA FINALE --- */
+.cta-section {
+    background: var(--black);
+    color: var(--white);
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.cta-heading {
+    font-size: 2.5rem;
+    color: var(--white);
+    margin-bottom: 30px;
+}
+
+.btn-gold {
+    display: inline-block;
+    background: var(--gold-hover);
+    color: var(--white);
+    padding: 15px 40px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+}
+
+.btn-gold:hover {
+    background: #bfa13a;
+    color: var(--white);
+}
+
+/* --- FOOTER (IDENTIQUE ACCUEIL) --- */
+footer {
+    background-color: var(--white);
+    padding: 80px 40px 40px;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto 60px;
+    text-align: left;
+}
+
+.footer-col h4 {
+    margin-bottom: 20px;
+    font-size: 1rem;
+}
+
+.footer-col p {
+    color: var(--dark-grey);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.footer-bottom {
+    border-top: 1px solid var(--border-color);
+    padding-top: 30px;
+    font-size: 0.75rem;
+    color: #999;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+    header {
+        padding: 0 20px;
+        height: 70px;
+    }
+
+    body {
+        padding-top: 70px;
+    }
+
+    nav,
+    .social-icons {
+        display: none;
+    }
+
+    .header-right {
+        gap: 10px;
+    }
+
+    .page-title {
+        font-size: 2.2rem;
+    }
+
+    /* Passage en colonne unique sur mobile */
+    .service-block,
+    .service-block.reverse {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .service-visual {
+        height: 300px;
+    }
+
+    .service-content {
+        padding: 50px 30px;
+    }
+}
+
+
+.image {
+
+    width: 200px;
+    height: 200px;
+    border: 3px solid var(--gold-hover);
+    background-color: #826ae2;
+    border-radius: 50%;
+}
