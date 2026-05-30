@@ -97,7 +97,7 @@ $montant_initial = $prix_initial + $frais_initial;
 
                 <!-- Image produit -->
                 <div class="prod-image-wrap">
-                    <img src="../../../produit/images/electricite/<?= htmlspecialchars($produit['image']) ?>"
+                    <img src="../../../produit/images/plomberie/<?= htmlspecialchars($produit['image']) ?>"
                         alt="<?= htmlspecialchars($produit['nom_produit']) ?>">
                 </div>
 

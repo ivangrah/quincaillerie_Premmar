@@ -611,30 +611,75 @@ footer {
     transform: translateY(0);
 }
 
-/* ════════════════════════════
-   RESPONSIVE
-════════════════════════════ */
-@media (max-width: 700px) {
-    header {
-        padding: 0 1.2rem;
+/* ═══════════════════════════════
+   RESPONSIVE — mobile-first
+═══════════════════════════════ */
+
+/* Tablette large (≤ 1024px) */
+@media (max-width: 1024px) {
+
+    .brand img {
+            height: 150px;
+            width: 150px;
+         
+        }
+    
+        .brand-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: bold;
+            font-size: 4.5rem;
+            color: var(--orange-light);
+            letter-spacing: 0.02em;
+            line-height: 1;
+            text-align: center;
+        }
+
+    #prestations,
+    #quincaillerie {
+        padding: 4.5rem 2rem;
     }
 
-    .header-right .phone-link {
+    .prestations-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+/* Tablette (≤ 768px) */
+@media (max-width: 768px) {
+    header {
+        padding: 0 1.5rem;
+        height: 64px;
+    }
+
+
+         .brand-name {
+             font-size: 1.7rem;
+             margin-left: 10px;
+         }
+
+    .phone-link {
         display: none;
     }
 
     .hero {
-        padding: 4rem 1.5rem 3.5rem;
-        min-height: auto;
+        padding: 4rem 2rem 3.5rem;
+        min-height: 420px;
+    }
+
+    .hero h1 {
+        font-size: clamp(2rem, 5vw, 2.8rem);
     }
 
     .hero-bg-africa {
-        display: none;
+        opacity: 0.04;
+        right: 1rem;
+        width: 280px;
+        height: 330px;
     }
 
     .legal-bar {
-        padding: 1rem 1.2rem;
-        gap: 1.2rem;
+        padding: 0.9rem 1.5rem;
+        gap: 1.4rem;
     }
 
     .legal-sep {
@@ -643,7 +688,12 @@ footer {
 
     #prestations,
     #quincaillerie {
-        padding: 4rem 1.5rem;
+        padding: 4rem 1.8rem;
+    }
+
+    .prestations-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
     }
 
     footer {
@@ -653,5 +703,167 @@ footer {
     .footer-info {
         text-align: left;
     }
+
+
+            .brand img {
+            height: 70px;
+            width: 70px;
+            object-fit: contain;
+            background: var(--orange-pale);
+            border-radius: 50%;
+            margin-left: 50px;
+        }
+
+                  
+}
+
+
+
+/* Mobile (≤ 480px) */
+
+@media (max-width: 480px) {
+    header {
+        padding: 0 1rem;
+        height: 60px;
+    }
+
+    .brand img {
+        height: 60px;
+        width: 60px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .brand-name {
+        font-size: 1.9rem;
+    }
+
+    .btn-boutique-header {
+        padding: 0.45rem 0.9rem;
+        font-size: 0.7rem;
+        letter-spacing: 0.04em;
+    }
+
+    .hero {
+        padding: 3.2rem 1.2rem 3rem;
+        min-height: auto;
+    }
+
+    .hero-eyebrow {
+        margin-bottom: 1.2rem;
+    }
+
+    .hero h1 {
+        font-size: clamp(1.9rem, 8vw, 2.4rem);
+        margin-bottom: 1rem;
+    }
+
+    .hero-desc {
+        font-size: 0.86rem;
+        margin-bottom: 1.8rem;
+    }
+
+    /* CTA en colonne sur mobile */
+    .hero-cta {
+        flex-direction: column;
+        gap: 0.7rem;
+    }
+
+    .btn-primary,
+    .btn-ghost {
+        text-align: center;
+        padding: 0.8rem 1.6rem;
+        font-size: 0.8rem;
+    }
+
+    .hero-bg-africa {
+        display: none;
+    }
+
+    .legal-bar {
+        padding: 0.85rem 1rem;
+        gap: 0.9rem;
+    }
+
+    .legal-value {
+        font-size: 0.74rem;
+    }
+
+    #prestations,
+    #quincaillerie {
+        padding: 3.2rem 1rem;
+    }
+
+    .section-title {
+        margin-bottom: 2.2rem;
+    }
+
+    /* 1 colonne sur petit mobile */
+    .prestations-grid {
+        grid-template-columns: 1fr;
+        gap: 0.9rem;
+    }
+
+    .prest-card {
+        padding: 1.4rem 1.2rem 1.3rem;
+    }
+
+    .quinc-tagline {
+        font-size: 0.72rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .quinc-desc {
+        font-size: 0.88rem;
+    }
+
+    .quinc-categories {
+        gap: 0.5rem;
+    }
+
+    .quinc-cat {
+        font-size: 0.72rem;
+        padding: 0.35rem 0.85rem;
+    }
+
+    /* Bouton pleine largeur */
+    .btn-boutique {
+        padding: 0.85rem 2rem;
+        font-size: 0.82rem;
+        width: 100%;
+        text-align: center;
+    }
+
+    footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+        padding: 1rem;
+    }
+
+    .footer-info {
+        text-align: left;
+    }
+
+    .footer-info p {
+        font-size: 0.72rem;
+    }
+}
+
+/* Très petit mobile (≤ 360px) */
+@media (max-width: 360px) {
+    .brand-name {
+        font-size: 0.85rem;
+    }
+
+    /* Cacher le bouton header pour gagner de la place */
+    .btn-boutique-header {
+        display: none;
+    }
+
+    .hero h1 {
+        font-size: 1.75rem;
+    }
+
 }
 

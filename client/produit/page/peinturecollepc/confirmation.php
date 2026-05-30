@@ -12,7 +12,7 @@ use PHPMailer\PHPMailer\Exception;
 include_once "../../../../bd/config.php"; // timezone + $pdo initialisés ici
 include_once "config_secret.php";
 
-// ✅ Récupérer id_commande depuis l'URL OU depuis la session (double sécurité)
+//  Récupérer id_commande depuis l'URL OU depuis la session (double sécurité)
 // GeniusPay peut modifier l'URL de retour et perdre les paramètres GET
 session_start();
 

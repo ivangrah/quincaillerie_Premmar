@@ -1,12 +1,11 @@
 <?php
-require_once 'config.php';
 
-
+include_once 'config.php';
 
 $success = null;
 
 try {
-    $connection = new PDO($dsn, $username, $password);
+    $connection = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $sql = "SELECT * FROM CATEGORIE";
@@ -103,7 +102,11 @@ try {
         /* limite sur grand écran */
     }
 
-    /* 📱 Responsive pour petits écrans */
+    a{
+        text-decoration: none;
+    }
+
+    /*  Responsive pour petits écrans */
     @media (max-width: 768px) {
 
         img {

@@ -151,6 +151,13 @@
                 <p style="margin-top: 15px;"><strong>07 08 20 30 05</strong></p>
                 <p><a href="mailto:contact@bijouterieloicbauche.fr">Nous écrire</a></p>
             </div>
+            <p>aller à la prestations suivante</p>
+
+            <a href="" id="index">
+                 <button id="suivate">cliquer ici</button>
+            </a>œ
+              
+
           
         </div>
         <div class="footer-bottom">

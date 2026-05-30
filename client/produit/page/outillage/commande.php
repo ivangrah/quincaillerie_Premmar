@@ -13,7 +13,7 @@ if ($id_produit === 0) {
     die("<p style='color:red'>Produit introuvable.</p>");
 }
 
-// ✅ On utilise directement $pdo fourni par config.php — pas de double connexion
+// On utilise directement $pdo fourni par config.php — pas de double connexion
 try {
     $sql = "SELECT p.*, sc.nom_sous_categorie
             FROM PRODUIT p
@@ -37,7 +37,7 @@ try {
     die();
 }
 
-// ✅ FIX Bug 2 : Calcul du montant initial côté PHP pour initialiser le champ caché
+//  FIX Bug 2 : Calcul du montant initial côté PHP pour initialiser le champ caché
 $prix_initial    = count($types) > 0 ? (float)$types[0]['prix'] : (float)$produit['prix'];
 $frais_initial   = ($prix_initial > 0 && $prix_initial <= 5000) ? 2000 : ($prix_initial > 5000 ? 5000 : 0);
 $montant_initial = $prix_initial + $frais_initial;
@@ -97,7 +97,7 @@ $montant_initial = $prix_initial + $frais_initial;
 
                 <!-- Image produit -->
                 <div class="prod-image-wrap">
-                    <img src="../../../produit/images/outillage/<?= htmlspecialchars($produit['image']) ?>"
+                    <img src="../../images/outillage/<?= htmlspecialchars($produit['image']) ?>"
                         alt="<?= htmlspecialchars($produit['nom_produit']) ?>">
                 </div>
 
@@ -140,7 +140,7 @@ $montant_initial = $prix_initial + $frais_initial;
                     </div>
                 </div>
 
-                <!-- ✅ FIX Bug 1 : Affichage initial vide, le JS recalcule immédiatement -->
+                <!--  FIX Bug 1 : Affichage initial vide, le JS recalcule immédiatement -->
                 <div class="prix-total-wrap">
                     <span class="prix-total-label">Total</span>
                     <span id="prix_total">Chargement…</span>
@@ -149,7 +149,7 @@ $montant_initial = $prix_initial + $frais_initial;
                 <!-- Champs cachés -->
                 <input type="hidden" name="id_produit" value="<?= (int)$produit['id_produit'] ?>">
                 <input type="hidden" name="quantite" id="quantite_hidden" value="1">
-                <!-- ✅ FIX Bug 2 : Valeur initiale calculée côté PHP, plus de "0" envoyé -->
+                <!--  FIX Bug 2 : Valeur initiale calculée côté PHP, plus de "0" envoyé -->
                 <input type="hidden" id="prix_total_hidden" name="prix_total_final" value="<?= $montant_initial ?>">
 
                 <!-- Bouton confirmer -->
@@ -246,7 +246,7 @@ $montant_initial = $prix_initial + $frais_initial;
                         </label>
 
                         <label class="pay-option">
-                            <!-- ✅ FIX Bug 3 : on écoute le changement de mode pour recalculer les frais -->
+                            <!--  FIX Bug 3 : on écoute le changement de mode pour recalculer les frais -->
                             <input type="radio" name="mode_paiement" value="en_boutique">
                             <div class="pay-icon"><i class="fa-solid fa-store"></i></div>
                             <div class="pay-info">
@@ -293,7 +293,7 @@ $montant_initial = $prix_initial + $frais_initial;
         const quantiteHidden = document.getElementById('quantite_hidden');
         const prixTotalSpan = document.getElementById('prix_total');
 
-        // ✅ FIX Bug 3 : fonction updatePrix tient compte du mode de paiement
+        //  FIX Bug 3 : fonction updatePrix tient compte du mode de paiement
         function updatePrix() {
             const totalProduits = parseFloat(prixUnitaire) * parseInt(quantite);
             const modeSelectionne = document.querySelector('input[name="mode_paiement"]:checked')?.value;
@@ -311,10 +311,10 @@ $montant_initial = $prix_initial + $frais_initial;
 
             const totalFinal = totalProduits + frais;
 
-            // ✅ FIX Bug 1 : affichage toujours mis à jour par le JS
+            // FIX Bug 1 : affichage toujours mis à jour par le JS
             prixTotalSpan.textContent = new Intl.NumberFormat('fr-FR').format(totalFinal) + " FCFA";
 
-            // ✅ FIX Bug 2 : champ caché toujours synchronisé avec la vraie valeur
+            //  FIX Bug 2 : champ caché toujours synchronisé avec la vraie valeur
             document.getElementById('prix_total_hidden').value = totalFinal;
         }
 
@@ -341,7 +341,7 @@ $montant_initial = $prix_initial + $frais_initial;
             });
         });
 
-        // ✅ FIX Bug 3 : recalcul quand le mode de paiement change
+        //  FIX Bug 3 : recalcul quand le mode de paiement change
         document.querySelectorAll('input[name="mode_paiement"]').forEach(radio => {
             radio.addEventListener('change', updatePrix);
         });
@@ -355,7 +355,7 @@ $montant_initial = $prix_initial + $frais_initial;
             }
         });
 
-        // ✅ Appel au chargement de la page pour afficher le bon montant dès le début
+        //  Appel au chargement de la page pour afficher le bon montant dès le début
         updatePrix();
     </script>
 

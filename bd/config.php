@@ -23,7 +23,7 @@ $password = $pass;
 try {
     $pdo = new PDO($dsn, $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    // ✅ Synchroniser le timezone MySQL avec PHP
+
     date_default_timezone_set('Africa/Abidjan');
     $pdo->exec("SET time_zone = '+00:00'");
 } catch (PDOException $e) {

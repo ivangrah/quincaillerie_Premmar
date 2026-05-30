@@ -35,7 +35,12 @@
         </div>
     </header>
 
+
     <section class="page-hero">
+
+    <button class="burger-menu" onclick="document.querySelector('.mobile-nav').classList.toggle('open')">
+  <span></span><span></span><span></span>
+</button>
       
         <div class="page-hero-content">
             <h1 class="page-title">Nos Prestations</h1>

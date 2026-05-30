@@ -1,4 +1,4 @@
-/* --- RESET & VARIABLES (IDENTIQUES ACCUEIL) --- */
+/* --- RESET & VARIABLES --- */
 :root {
     --black: #1a1a1a;
     --dark-grey: #4a4a4a;
@@ -19,7 +19,6 @@ body {
     color: var(--black);
     background-color: var(--white);
     line-height: 1.7;
-    /* Interligne légèrement augmenté pour la lecture */
     padding-top: 90px;
 }
 
@@ -50,40 +49,51 @@ img {
     display: block;
 }
 
-/* --- HEADER FIXE (COPIÉ-COLLÉ EXACT DE L'ACCUEIL) --- */
+/* ============================================================
+   HEADER
+   ============================================================ */
 header {
-    position: relative;
+    position: fixed;
+    /* FIXE : corrigé depuis relative */
     top: 0;
     left: 0;
     width: 100%;
-    height: 20vh;
+    height: 90px;
     background-color: var(--white);
     border-bottom: 1px solid #ccc;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 60px;
-    padding-bottom: 90px;
-
-
+    z-index: 1000;
 }
 
 .logo {
     font-family: 'Bodoni Moda', serif;
-    font-size: 5.5rem;
+    font-size: 3rem;
+    /* Réduit depuis 5.5rem */
     font-weight: 600;
     letter-spacing: 2px;
     color: var(--gold-hover);
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 10px;
-
+    white-space: nowrap;
 }
 
+/* Navigation desktop */
+nav {
+    display: flex;
+    gap: 30px;
+}
 
+nav a {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    position: relative;
+}
 
-/* Ajout d'une classe 'active' pour le lien de la page courante */
 nav a.active::after {
     content: '';
     position: absolute;
@@ -95,11 +105,11 @@ nav a.active::after {
 }
 
 nav a:hover::after {
-    width: 100%;
     content: '';
     position: absolute;
     bottom: -5px;
     left: 0;
+    width: 100%;
     height: 1px;
     background: var(--black);
     transition: 0.3s;
@@ -141,10 +151,62 @@ nav a:hover::after {
     transform: translateY(-2px);
 }
 
-/* --- PAGE HERO (Spécifique à cette page) --- */
+/* Menu burger (caché sur desktop) */
+.burger-menu {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 5px;
+    background: none;
+    border: none;
+}
+
+.burger-menu span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--black);
+    transition: 0.3s;
+}
+
+/* Menu mobile overlay */
+.mobile-nav {
+    display: none;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background: var(--white);
+    border-bottom: 1px solid var(--border-color);
+    flex-direction: column;
+    padding: 20px 30px;
+    z-index: 999;
+    gap: 0;
+}
+
+.mobile-nav.open {
+    display: flex;
+}
+
+.mobile-nav a {
+    padding: 14px 0;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 500;
+}
+
+.mobile-nav a:last-child {
+    border-bottom: none;
+}
+
+/* ============================================================
+   PAGE HERO
+   ============================================================ */
 .page-hero {
     height: 50vh;
-    /* Moins haut que l'accueil */
     width: 100%;
     position: relative;
     background: #000;
@@ -163,6 +225,7 @@ nav a:hover::after {
     transform: translate(-50%, -50%);
     text-align: center;
     color: var(--white);
+    width: 90%;
 }
 
 .page-title {
@@ -177,7 +240,9 @@ nav a:hover::after {
     font-weight: 300;
 }
 
-/* --- CONTENU PRESTATIONS (Structure Alternée) --- */
+/* ============================================================
+   SERVICES — BLOCS ALTERNÉS
+   ============================================================ */
 .services-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -186,10 +251,8 @@ nav a:hover::after {
 .service-block {
     display: flex;
     min-height: 600px;
-    /* Hauteur minimale pour l'impact visuel */
 }
 
-/* Pour alterner l'ordre image/texte */
 .service-block.reverse {
     flex-direction: row-reverse;
 }
@@ -210,7 +273,6 @@ nav a:hover::after {
 
 .service-block.reverse .service-content {
     background: var(--light-grey);
-    /* Fond gris clair pour les blocs alternés */
 }
 
 .service-heading {
@@ -219,7 +281,6 @@ nav a:hover::after {
     position: relative;
 }
 
-/* Petit trait doré sous les titres */
 .service-heading::after {
     content: '';
     display: block;
@@ -235,7 +296,6 @@ nav a:hover::after {
     max-width: 500px;
 }
 
-/* Listes détaillées */
 .detailed-list {
     margin-left: 20px;
 }
@@ -254,7 +314,9 @@ nav a:hover::after {
     margin-top: 5px;
 }
 
-/* --- SECTION CTA FINALE --- */
+/* ============================================================
+   CTA FINALE
+   ============================================================ */
 .cta-section {
     background: var(--black);
     color: var(--white);
@@ -283,7 +345,9 @@ nav a:hover::after {
     color: var(--white);
 }
 
-/* --- FOOTER (IDENTIQUE ACCUEIL) --- */
+/* ============================================================
+   FOOTER
+   ============================================================ */
 footer {
     background-color: var(--white);
     padding: 80px 40px 40px;
@@ -318,31 +382,110 @@ footer {
     color: #999;
 }
 
-/* MOBILE */
-@media (max-width: 900px) {
+/* ============================================================
+   IMAGE RONDE
+   ============================================================ */
+.image {
+    width: 200px;
+    height: 200px;
+    border: 3px solid var(--gold-hover);
+    background-color: #826ae2;
+    border-radius: 50%;
+}
+
+/* ============================================================
+   RESPONSIVE — TABLETTE  (600px – 1100px)
+   ============================================================ */
+@media (max-width: 1100px) {
+    header {
+        padding: 0 30px;
+    }
+
+    .logo {
+        font-size: 2.2rem;
+    }
+
+    nav {
+        gap: 18px;
+    }
+
+    nav a {
+        font-size: 0.72rem;
+    }
+
+    .header-contact {
+        display: none;
+        /* Trop serré sur tablette */
+    }
+
+    .service-content {
+        padding: 60px 40px;
+    }
+
+    .service-heading {
+        font-size: 1.8rem;
+    }
+
+    .service-block {
+        min-height: 480px;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+    }
+
+    .cta-heading {
+        font-size: 2rem;
+    }
+}
+
+/* ============================================================
+   RESPONSIVE — MOBILE  (≤ 768px)
+   ============================================================ */
+@media (max-width: 768px) {
+
+    /* Body */
+    body {
+        padding-top: 70px;
+    }
+
+    /* Header */
     header {
         padding: 0 20px;
         height: 70px;
     }
 
-    body {
-        padding-top: 70px;
+    .logo {
+        font-size: 1.8rem;
     }
 
+    /* Cacher nav desktop et social, afficher burger */
     nav,
-    .social-icons {
+    .social-icons,
+    .header-contact {
         display: none;
     }
 
-    .header-right {
-        gap: 10px;
+    .burger-menu {
+        display: flex;
+    }
+
+    /* Page hero */
+    .page-hero {
+        height: 40vh;
     }
 
     .page-title {
-        font-size: 2.2rem;
+        font-size: 1.8rem;
+        margin-bottom: 10px;
     }
 
-    /* Passage en colonne unique sur mobile */
+    .page-subtitle {
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+    }
+
+    /* Blocs service : empilement vertical */
     .service-block,
     .service-block.reverse {
         flex-direction: column;
@@ -350,20 +493,79 @@ footer {
     }
 
     .service-visual {
-        height: 300px;
+        height: 260px;
+        flex: none;
     }
 
     .service-content {
-        padding: 50px 30px;
+        padding: 40px 24px;
+        flex: none;
+    }
+
+    .service-heading {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .service-description {
+        font-size: 0.9rem;
+        margin-bottom: 28px;
+        max-width: 100%;
+    }
+
+    .detailed-list li {
+        margin-bottom: 12px;
+        font-size: 0.9rem;
+    }
+
+    /* CTA */
+    .cta-section {
+        padding: 70px 24px;
+    }
+
+    .cta-heading {
+        font-size: 1.6rem;
+        margin-bottom: 24px;
+    }
+
+    .btn-gold {
+        padding: 14px 30px;
+        font-size: 0.75rem;
+    }
+
+    /* Footer */
+    footer {
+        padding: 50px 24px 30px;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-bottom: 40px;
     }
 }
 
+/* ============================================================
+   RESPONSIVE — TRÈS PETIT MOBILE  (≤ 380px)
+   ============================================================ */
+@media (max-width: 380px) {
+    .logo {
+        font-size: 1.5rem;
+    }
 
-.image {
+    .page-title {
+        font-size: 1.5rem;
+    }
 
-    width: 200px;
-    height: 200px;
-    border: 3px solid var(--gold-hover);
-    background-color: #826ae2;
-    border-radius: 50%;
+    .service-heading {
+        font-size: 1.3rem;
+    }
+
+    .cta-heading {
+        font-size: 1.4rem;
+    }
+
+    .service-visual {
+        height: 220px;
+    }
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electricite – PREMMAR</title>
+    <title>Outillage – PREMMAR</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -40,12 +40,33 @@
                     <h1 style="margin-top: 70px;">OUTILLAGE</h1>
                 </nav>
             </header>
+
+                 <div class="line-flex">
+            <a href="../plomberie/index.php">Plomberie</a>
+            <a href="../electricite/index.php">Electricite</a>
+            <a href="../serrurerie/index.php">Serrurerie</a>
+            <a href="../visserie/index.php">Visserie</a>
+            <a href="../peinturecollepc/index.php">Peinture colle et produit chimique</a>
+            <a href="../rouleaux/index.php">Rouleaux</a>
+              <a href="../cables/index.php">Cables</a>
+                <a href="../adhesifs/index.php">Adhesifs</a>
+            
+        </div>
         </div>
 
         <?php
+session_start();
+
+$count = 0;
+
+if (isset($_SESSION['panier'])) {
+    $count = count($_SESSION['panier']);
+}
+
+
         include_once "../../../../bd/config.php";
 
-        // ID de la catégorie Electricite = 4
+        // ID de la catégorie Electricite = 1
         $id_categorie = 12;
 
         try {
@@ -73,7 +94,7 @@
 
             <?php else: ?>
                 <?php foreach ($result as $produit): ?>
-                    <div class="carte">
+                    <div class="carte" id="carte">
 
                         <div class="carte-image">
                             <img src="../../images/outillage/<?= htmlspecialchars($produit['image']) ?>"
@@ -94,10 +115,11 @@
                                 <span class="carte-prix">
                                     <?= number_format($produit['prix'], 0, ',', ' ') ?> <small>FCFA</small>
                                 </span>
-
-                                <a href="commande.php?id=<?= (int)$produit['id_produit'] ?>" class="btn-voir">
-                                    <i class="fa-solid fa-cart-shopping"></i> Commander
-                                </a>
+                                  <a href="../../../../bd/panier.php?id=<?= $produit['id_produit'] ?>" class="btn-voir">
+                                       <i class="fa-solid fa-cart-shopping"></i>
+                                        Ajouter
+                                    </a>
+                            
                             </div>
                         </div>
 
@@ -110,5 +132,45 @@
         <?php include_once "../../../../bd/footer.php"; ?>
     </section>
 </body>
+
+<script>
+
+const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+addToCartButtons.forEach(button => {
+
+    button.addEventListener('click', function () {
+
+        // récupère la carte du produit
+        const card = this.closest('.carte');
+
+        // récupère le badge de CETTE carte
+        const cartCount = card.querySelector('.cartCount');
+
+        let count = parseInt(cartCount.textContent);
+
+        if (count < 10) {
+
+            count++;
+
+            cartCount.textContent = count;
+
+            alert(count + " produit(s) ajouté(s) au panier !");
+
+        } else {
+
+            alert("Limite atteinte ! 10 produits maximum.");
+
+        }
+
+    });
+
+});
+
+ 
+
+
+
+</script>
 
 </html>
