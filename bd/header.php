@@ -1,3 +1,10 @@
+<?php 
+
+session_start();
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -44,7 +51,7 @@
     <div class="pm-header">
 
       <!-- LOGO -->
-      <a class="pm-logo" href="#">
+      <a class="pm-logo" href="../client/page-accueil/index.php">
 
         <div class="pm-logo-circle">P</div>
 
@@ -98,7 +105,7 @@
 
           <a href="panier.php" style="text-decoration: none; ">
              <i class="fa fa-shopping-cart"></i>
-               <span class="pm-badge">3</span>
+               <span class="pm-badge"> <?php  $_SESSION['count'] ?> ></span>
           </a>
         
 

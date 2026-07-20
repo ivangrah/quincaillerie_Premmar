@@ -47,12 +47,9 @@ $mode_pour_bd = match ($mode_form) {
     default       => 'apres_livraison',
 };
 
-//gestion des quantités 
-
 // 4. CALCUL DES FRAIS CÔTÉ SERVEUR
 $prix_unitaire  = (float)$produit['prix'];
 $total_produits = $prix_unitaire * $quantite;
-
 
 if ($mode_pour_bd === 'en_boutique') {
     $frais = 0;
@@ -76,17 +73,20 @@ if (abs($montant_client - $montant_total) > 1) {
 
 $numero_cmd = "CMD" . time();
 
+// Générer un token unique pour retrouver la commande sans session ni GET fragile
+$token = bin2hex(random_bytes(32)); // 64 caractères hex
+
 // 6. ENREGISTRER LE CLIENT
 $stmt_cli = $pdo->prepare("INSERT INTO CLIENT (nom, telephone, email, adresse) VALUES (?, ?, ?, ?)");
 $stmt_cli->execute([$nom, $telephone, $email, $adresse]);
 $id_client = $pdo->lastInsertId();
 
-// 7. ENREGISTRER LA COMMANDE
+// 7. ENREGISTRER LA COMMANDE avec le token
 $stmt_cmd = $pdo->prepare("
-    INSERT INTO COMMANDE (numero_commande, montant_total, mode_paiement, statut_commande, id_client, id_produit, quantite) 
-    VALUES (?, ?, ?, 'en_attente', ?, ?, ?)
+    INSERT INTO COMMANDE (numero_commande, montant_total, mode_paiement, statut_commande, id_client, id_produit, quantite, token_confirmation) 
+    VALUES (?, ?, ?, 'en_attente', ?, ?, ?, ?)
 ");
-$stmt_cmd->execute([$numero_cmd, $montant_total, $mode_pour_bd, $id_client, $id_produit, $quantite]);
+$stmt_cmd->execute([$numero_cmd, $montant_total, $mode_pour_bd, $id_client, $id_produit, $quantite, $token]);
 $id_commande = $pdo->lastInsertId();
 
 // 8. VÉRIFICATION MONTANT MINIMUM GENIUSPAY
@@ -101,11 +101,6 @@ if ($mode_form === 'geniuspay' && $montant_total < 200) {
    ============================================================ */
 if ($mode_form === 'geniuspay') {
 
-    // ✅ Stocker l'id_commande en session AVANT la redirection
-    // GeniusPay peut modifier/supprimer les paramètres GET de l'URL de retour
-    session_start();
-    $_SESSION['id_commande_pending'] = $id_commande;
-
     $api_url = "https://pay.genius.ci/api/v1/merchant/payments";
 
     $payload = [
@@ -117,8 +112,7 @@ if ($mode_form === 'geniuspay') {
             "email" => $email,
             "phone" => $telephone
         ],
-        // On garde id_cmd dans l'URL ET en session (double sécurité)
-        "success_url" => "http://premmar.infinityfreeapp.com/projet_quincaillerie/client/produit/page/electricite/confirmation.php?id_cmd=" . $id_commande,
+        "success_url" => "http://premmar.infinityfreeapp.com/projet_quincaillerie/client/produit/page/electricite/confirmation.php?token=" . $token,
         "error_url"   => "http://premmar.infinityfreeapp.com/projet_quincaillerie/client/produit/page/electricite/commande.php?id=" . $id_produit
     ];
 
@@ -149,10 +143,9 @@ if ($mode_form === 'geniuspay') {
         header("Location: " . $url_redirection);
         exit();
     } else {
-        // Nettoyer BDD et session en cas d'échec
+        // Nettoyer BDD en cas d'échec API
         $pdo->prepare("DELETE FROM COMMANDE WHERE id_commande = ?")->execute([$id_commande]);
         $pdo->prepare("DELETE FROM CLIENT WHERE id_client = ?")->execute([$id_client]);
-        unset($_SESSION['id_commande_pending']);
         ob_end_clean();
         echo "<h3>Erreur GeniusPay</h3>";
         echo "Réponse brute : <pre>" . htmlspecialchars($response_json) . "</pre>";
@@ -182,7 +175,7 @@ ob_end_clean();
                     <p class="text-secondary">Votre commande <strong><?= $numero_cmd ?></strong> a bien été enregistrée.</p>
                     <p class="text-secondary">Mode choisi :
                         <strong>
-                            <?= match ($mode_form){
+                            <?= match ($mode_form) {
                                 'geniuspay'       => 'Paiement avant livraison (GeniusPay)',
                                 'en_boutique'     => 'Paiement en boutique',
                                 'apres_livraison' => 'Paiement à la livraison',
@@ -200,6 +193,6 @@ ob_end_clean();
             </div>
         </div>
     </div>
-  </body>
+</body>
 
 </html>

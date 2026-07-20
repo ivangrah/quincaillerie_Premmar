@@ -4,25 +4,25 @@
    VARIABLES
 ══════════════════════════════════════════ */
 :root {
-    --orange: #f97316;
-    --orange-glow: rgba(249, 115, 22, 0.18);
-    --orange-dim: rgba(249, 115, 22, 0.08);
-    --violet: #7c3aed;
-    --violet-soft: rgba(124, 58, 237, 0.10);
+    --orange: #f3a125;
+    --orange-glow: rgba(243, 161, 37, 0.2);
+    --orange-dim: rgba(243, 161, 37, 0.08);
+    --violet: #4f1f6e;
+    --violet-soft: rgba(79, 31, 110, 0.1);
 
     /* Panneau gauche */
-    --dark: #0f0e13;
-    --dark-card: #1a1825;
-    --dark-border: rgba(255, 255, 255, 0.08);
-    --dark-text: #f1eff8;
-    --dark-muted: rgba(241, 239, 248, 0.45);
+    --dark: #1a0a2e;
+    --dark-card: #2a1745;
+    --dark-border: rgba(243, 161, 37, 0.15);
+    --dark-text: #f5f0ff;
+    --dark-muted: #b39dca;
 
     /* Panneau droit */
-    --light: #f8f6ff;
+    --light: #fdfbff;
     --light-card: #ffffff;
-    --light-border: #e5e1f5;
-    --text: #18152b;
-    --text-muted: #7b7490;
+    --light-border: #e2dbf0;
+    --text: #201a26;
+    --text-muted: #736d7a;
 
     --panel-left: 42%;
     --navbar-h: 64px;

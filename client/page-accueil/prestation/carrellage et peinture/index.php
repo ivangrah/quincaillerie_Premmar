@@ -15,11 +15,11 @@
 <body>
 
     <header>
-        <div class="logo">
+        <a class="logo" href="../../index.php">
              <img src="../../logo0.png" alt="logo" class="image" >
             <span>Premmar Service</span>
            
-        </div>
+        </a>
 
         
         <div class="header-right">
@@ -170,7 +170,7 @@
                 <h4>NOUS TROUVER</h4>
                 <p>Abidjan, quartier Djorobite </p>
                 <p style="margin-top: 15px;"><strong>07 08 20 30 05</strong></p>
-                <p><a href="mailto:contact@bijouterieloicbauche.fr">Nous écrire</a></p>
+                <p><a href="mailto:contact@premmar.ci">Nous écrire</a></p>
             </div>
           
         </div>

@@ -15,11 +15,11 @@
 <body>
 
     <header>
-        <div class="logo">
+        <a class="logo" href="../../index.php">
              <img src="../../logo0.png" alt="logo" class="image" >
             <span>Premmar Service</span>
            
-        </div>
+        </a>
 
         
         <div class="header-right">
@@ -149,19 +149,19 @@
                 <h4>NOUS TROUVER</h4>
                 <p>Abidjan, quartier Djorobite </p>
                 <p style="margin-top: 15px;"><strong>07 08 20 30 05</strong></p>
-                <p><a href="mailto:contact@bijouterieloicbauche.fr">Nous écrire</a></p>
+                <p><a href="mailto:contact@premmar.ci">Nous écrire</a></p>
             </div>
-            <p>aller à la prestations suivante</p>
+            <p>aller à la prestation suivante</p>
 
-            <a href="" id="index">
+            <a href="#" id="index">
                  <button id="suivate">cliquer ici</button>
-            </a>œ
+            </a>
               
 
           
         </div>
         <div class="footer-bottom">
-            &copy; 2024 Bijouterie Loïc Bauche. Tous droits réservés.
+            &copy; 2026 PREMMAR SERVICES. Tous droits réservés.
         </div>
     </footer>
 

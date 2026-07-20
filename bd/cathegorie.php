@@ -16,123 +16,130 @@ try {
     die("Erreur : " . $error->getMessage());
 }
 
-
 ?>
 
 <?php include 'header.php'; ?>
-<?php include 'cathe.css'; ?>
 
-
-
-
-
+<div class="cat-grid">
 <?php foreach ($result as $row) : ?>
-    <div class="position">
-        <a href="/projet_quincaillerie/<?= htmlspecialchars($row['lien']) ?>">
-            <div class="encd">
-                <img src="../bd/catheimage/<?= htmlspecialchars($row['image']) ?>">
-                <h3><?= htmlspecialchars($row['nom_categorie']) ?></h3>
+    <a href="/projet_quincaillerie/<?= htmlspecialchars($row['lien']) ?>" class="cat-card-link">
+        <div class="cat-card">
+            <div class="cat-image-wrapper">
+                <img src="../bd/catheimage/<?= htmlspecialchars($row['image']) ?>" alt="<?= htmlspecialchars($row['nom_categorie']) ?>">
             </div>
-        </a>
-    </div>
+            <h3><?= htmlspecialchars($row['nom_categorie']) ?></h3>
+        </div>
+    </a>
 <?php endforeach; ?>
-
-
+</div>
 
 <?php include 'footer.php'; ?>
 
 <style>
-    /* Reset simple */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+    body {
+        background: #1a0a2e;
+        font-family: 'Poppins', sans-serif;
+        color: #f5f0ff;
     }
 
-    /* Image responsive */
-    img {
-        width: 100%;
-        /* prend toute la largeur disponible */
-        max-width: 500px;
-        /* mais ne dépasse pas 500px */
-        height: auto;
-        /* garde les proportions */
-        border-radius: 20px;
-        margin-top: 50px;
-        transition: transform 0.3s ease;
+    .cat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 0 24px;
     }
 
-    /* Hover */
-    img:hover {
-        transform: scale(1.06);
-        cursor: pointer;
-    }
-
-    /* Conteneur principal */
-    .position {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 50px;
-        padding: 10px;
-    }
-
-    /* Titre */
-    h3 {
-        margin-top: 20px;
-        font-size: 2rem;
-        color: #441b5f;
-        text-shadow: 1px 0px 1px #6e5d42;
-        font-weight: bold;
-        text-align: center;
-    }
-
-    /* Carte */
-    .encd {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background-color: #afafaf;
-        padding: 20px;
-        border-radius: 20px;
-        box-shadow: 0 4px 8px rgba(26, 25, 25, 0.1);
-        width: 90%;
-        /* s'adapte sur mobile */
-        max-width: 600px;
-        /* limite sur grand écran */
-    }
-
-    a{
+    .cat-card-link {
         text-decoration: none;
+        color: inherit;
     }
 
-    /*  Responsive pour petits écrans */
+    .cat-card {
+        background: #2a0f40;
+        border: 1px solid rgba(243, 161, 37, 0.15);
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.3s, box-shadow 0.3s;
+        height: 100%;
+    }
+
+    .cat-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(243, 161, 37, 0.6);
+        box-shadow: 0 15px 35px rgba(243, 161, 37, 0.15);
+    }
+
+    .cat-image-wrapper {
+        width: 100%;
+        height: 200px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid rgba(243, 161, 37, 0.2);
+        transition: border-color 0.3s;
+    }
+
+    .cat-card:hover .cat-image-wrapper {
+        border-color: rgba(243, 161, 37, 0.5);
+    }
+
+    .cat-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .cat-card:hover img {
+        transform: scale(1.06);
+    }
+
+    .cat-card h3 {
+        margin-top: 18px;
+        font-size: 1.15rem;
+        color: #f3a125;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        transition: color 0.3s;
+    }
+
+    .cat-card:hover h3 {
+        color: #f7bc5e;
+    }
+
     @media (max-width: 768px) {
-
-        img {
-            margin-top: 30px;
+        .cat-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 30px auto;
+            padding: 0 16px;
         }
-
-        h3 {
-            font-size: 1.5rem;
+        
+        .cat-image-wrapper {
+            height: 160px;
         }
-
-        .position {
-            margin-top: 30px;
+        
+        .cat-card h3 {
+            font-size: 1rem;
         }
-
     }
 
-    /* 📱 Très petits écrans */
     @media (max-width: 480px) {
-
-        h3 {
-            font-size: 1.3rem;
+        .cat-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
         }
-
-        .encd {
-            padding: 15px;
+        
+        .cat-image-wrapper {
+            height: 200px;
         }
-
     }
 </style>
+

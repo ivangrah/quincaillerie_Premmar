@@ -15,16 +15,16 @@
             <header>
                 <nav>
                     <div class="align-nav">
-                        <div class="skip">
+                        <a href="../../../page-accueil/index.php" class="skip">
                             <img src="./image-electrique/logo0.png" class="afrique" alt="logo">
                             <p>PREMMAR PRODUIT</p>
-                        </div>
+                        </a>
                     </div>
                 </nav>
                 <nav>
                     <div class="block">
                         <div class="serach">
-                            <input type="search" placeholder=" Recherche">
+                                 <input type="search" id="searchInput" placeholder=" Recherche" oninput="filtrerProduits()">
                         </div>
                     </div>
 
@@ -166,6 +166,46 @@ addToCartButtons.forEach(button => {
     });
 
 });
+
+
+function filtrerProduits() {
+    const terme = document.getElementById('searchInput').value.toLowerCase().trim();
+    const cartes = document.querySelectorAll('.carte');
+    let visible = 0;
+
+    cartes.forEach(carte => {
+        const nom = carte.querySelector('.carte-nom')?.textContent.toLowerCase() || '';
+        const desc = carte.querySelector('.carte-desc')?.textContent.toLowerCase() || '';
+        const sousCat = carte.querySelector('.carte-sous-cat')?.textContent.toLowerCase() || '';
+
+        const correspond = nom.includes(terme) || desc.includes(terme) || sousCat.includes(terme);
+
+        carte.style.display = correspond ? '' : 'none';
+        if (correspond) visible++;
+    });
+
+    // Afficher message si aucun résultat
+    let msgVide = document.getElementById('msg-recherche');
+    if (!msgVide) {
+        msgVide = document.createElement('div');
+        msgVide.id = 'msg-recherche';
+        msgVide.className = 'vide';
+        msgVide.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i><p>Aucun produit trouvé.</p>';
+        document.querySelector('.produits-grid').appendChild(msgVide);
+    }
+    msgVide.style.display = visible === 0 && terme !== '' ? 'flex' : 'none';
+}
+
+// Recherche aussi au clic sur Entrée
+document.getElementById('searchInput').addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        e.target.value = '';
+        filtrerProduits();
+    }
+});
+ 
+
+
 
 
 </script>

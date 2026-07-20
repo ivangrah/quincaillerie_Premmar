@@ -358,19 +358,20 @@
 /* ── BANNER ── */
 .pm-banner {
   background: var(--violet-deep);
-  border-top: 1px solid rgba(243, 161, 37, 0.12);
-  padding: 9px 24px;
+  border-top: 1px solid rgba(243, 161, 37, 0.15);
+  border-bottom: 1px solid rgba(243, 161, 37, 0.15);
+  padding: 10px 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  animation: booler 3s linear infinite;
+  color: var(--gold-light);
 }
 
 .pm-banner-text {
   font-family: 'Poppins', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;
 }
@@ -379,20 +380,8 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: currentColor;
-  opacity: 0.5;
-}
-
-@keyframes booler {
-  from {
-    background-color: #f3a125;
-    color: #4f1f6e;
-  }
-
-  to {
-    background-color: #4f1f6e;
-    color: #f3a125;
-  }
+  background: var(--gold);
+  opacity: 0.8;
 }
 
 /* ── HAMBURGER ── */

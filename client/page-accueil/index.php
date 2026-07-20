@@ -18,6 +18,15 @@
     <img src="../page-accueil/logo0.png" alt="Logo PREMMAR" onerror="this.style.display='none'">
     <div class="brand-name">PREMMAR SERVICES</div>
   </a>
+  <div class="header-right">
+    <nav class="header-nav">
+      <a href="#">Accueil</a>
+      <a href="#prestations">Nos prestations</a>
+      <a href="#quincaillerie">Boutique</a>
+    </nav>
+    <a class="phone-link" href="tel:+2250708203005">Tél : <strong>07 08 20 30 05</strong></a>
+    <a class="btn-boutique-header" href="../../bd/cathegorie.php">Boutique</a>
+  </div>
 </header>
 
 <!-- ══ HERO ══ -->

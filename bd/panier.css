@@ -1,6 +1,6 @@
 /* =========================
    PANIER PREMMAR RESPONSIVE
-========================= */
+   ========================= */
 
 body {
     background: #1a0a2e;
@@ -12,8 +12,11 @@ body {
 h2 {
     text-align: center;
     color: #f3a125;
-    margin: 25px 10px;
-    font-size: 20px;
+    margin: 35px 10px 20px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 p {
@@ -23,186 +26,199 @@ p {
 
 /* =========================
    CARTE PRODUIT
-========================= */
-
+   ========================= */
 .item {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 25px;
 
     background: #2a0f40;
-    border: 1px solid rgba(243, 161, 37, 0.2);
+    border: 1px solid rgba(243, 161, 37, 0.15);
     border-radius: 16px;
 
-    padding: 16px;
-    margin: 15px auto;
+    padding: 20px;
+    margin: 20px auto;
 
     max-width: 900px;
     width: 95%;
 
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-    transition: 0.2s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.3s, box-shadow 0.3s;
 }
 
 .item:hover {
     transform: translateY(-5px);
+    border-color: rgba(243, 161, 37, 0.4);
+    box-shadow: 0 15px 35px rgba(243, 161, 37, 0.12);
 }
 
 /* IMAGE */
 .item img {
-    width: 140px;
-    height: 140px;
+    width: 130px;
+    height: 130px;
     object-fit: cover;
-
     border-radius: 12px;
-    border: 2px solid rgba(243, 161, 37, 0.3);
+    border: 2px solid rgba(243, 161, 37, 0.25);
+    transition: border-color 0.3s;
+}
+
+.item:hover img {
+    border-color: rgba(243, 161, 37, 0.5);
 }
 
 /* CONTENU */
-.item h2 {
-    font-size: 18px;
-    color: #f3a125;
-    margin-bottom: 6px;
-}
-
-.item p {
-    font-size: 14px;
-    color: #b39dca;
-    margin: 4px 0;
-    text-align: left;
-}
-
-
-#panier-vide{
-
-    opacity: 0.1;
+.item-content {
+    flex: 1;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 100px;
+    flex-direction: column;
+    gap: 6px;
 }
-/* =========================
-   BOUTONS
-========================= */
 
-.item a {
+.item-content h3 {
+    font-size: 1.2rem;
+    color: #f3a125;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.item-content p {
+    font-size: 0.9rem;
+    color: #b39dca;
+    margin: 0;
+    text-align: left;
+    line-height: 1.5;
+}
+
+.item-content p strong {
+    color: #fff;
+    font-size: 1rem;
+    border-bottom: 1px dashed rgba(243, 161, 37, 0.3);
+    padding-bottom: 2px;
+}
+
+/* ACTIONS */
+.item-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* BOUTONS */
+.item-actions a {
     display: inline-block;
-    margin-top: 10px;
-    margin-right: 8px;
-
-    padding: 8px 14px;
+    padding: 10px 20px;
     border-radius: 8px;
-
     font-size: 13px;
     text-decoration: none;
     font-weight: 600;
-    transition: 0.2s;
+    text-align: center;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.25s ease;
+    white-space: nowrap;
 }
 
 /* SUPPRIMER */
-.item a[href*="remove"] {
-    border: 1px solid #f3a125;
+.item-actions a.remove {
+    border: 1px solid rgba(243, 161, 37, 0.5);
     color: #f3a125;
+    background: transparent;
 }
 
-.item a[href*="remove"]:hover {
+.item-actions a.remove:hover {
     background: #f3a125;
     color: #2a0f40;
+    box-shadow: 0 4px 15px rgba(243, 161, 37, 0.25);
 }
 
 /* COMMANDER */
-.item a[href*="commande"] {
-    border: 1px solid #4f1f6e;
-    background: rgba(243, 161, 37, 0.15);
-    color: #f3a125;
-}
-
-.item a[href*="commande"]:hover {
-    background: #f3a125;
+.item-actions a.order {
+    border: 1px solid #f3a125;
+    background: linear-gradient(135deg, #f3a125, #f7bc5e);
     color: #2a0f40;
 }
 
+.item-actions a.order:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(243, 161, 37, 0.4);
+}
+
+/* PANIER VIDE STATE */
+#panier-vide {
+    opacity: 0.15;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 80px auto;
+    font-size: 160px;
+    color: #f3a125;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.15;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.25;
+    }
+}
+
 /* =========================
-   TABLETTE
-========================= */
-
+   TABLETTE & MOBILE
+   ========================= */
 @media (max-width: 768px) {
-
     .item {
         flex-direction: column;
+        align-items: stretch;
         text-align: center;
-        padding: 14px;
+        padding: 20px;
+        gap: 15px;
     }
 
     .item img {
         width: 100%;
-        height: 220px;
+        height: 180px;
+        max-width: 250px;
+        margin: 0 auto;
     }
 
-    .item p {
+    .item-content p {
         text-align: center;
     }
 
-    .item a {
+    .item-actions {
+        flex-direction: row;
         width: 100%;
-        margin: 6px 0;
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .item-actions a {
+        flex: 1;
     }
 
     h2 {
-        font-size: 18px;
+        font-size: 1.3rem;
     }
-
-        #panier-vide {
-    
-          font-size: 30px;
-           margin-top: 50px;
-        }
 }
-
-/* =========================
-   MOBILE
-========================= */
 
 @media (max-width: 480px) {
-
     .item {
-        padding: 12px;
-        border-radius: 12px;
+        padding: 16px;
     }
 
-    .item img {
-        height: 180px;
+    .item-actions {
+        flex-direction: column;
     }
-
-    .item h2 {
-        font-size: 16px;
-    }
-
-    .item p {
-        font-size: 13px;
-    }
-
-    .item a {
-        font-size: 12px;
-        padding: 10px;
-    }
-
-         #panier-vide {
     
-          font-size: 20px;
-           margin-top: 50px;
-           display: flex;
-              align-items: center;
-                justify-content: center;
-                
-           
-        }
-
+    .item-actions a {
+        width: 100%;
+    }
 }
-
-/* =========================
-   GRAND ÉCRAN
-========================= */
 
 @media (min-width: 1200px) {
     .item {

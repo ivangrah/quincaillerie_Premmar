@@ -2,6 +2,12 @@
 session_start();
 include_once "config.php";
 
+
+// Test de persistance de session
+if (!isset($_SESSION['compteur'])) {
+    $_SESSION['compteur'] = 0;
+}
+$_SESSION['compteur']++;
 /* =======================
    AJOUT PRODUIT
 ======================= */
@@ -72,7 +78,7 @@ if(isset($_SESSION['panier'])){
 
     <div class="pm-header">
 
-        <a class="pm-logo" href="#">
+        <a class="pm-logo" href="../client/page-accueil/index.php">
             <div class="pm-logo-circle">P</div>
             <div class="pm-logo-text">
                 <span class="pm-logo-name">PREMMAR</span>
@@ -128,7 +134,6 @@ if(isset($_SESSION['panier'])){
 </div>
 
   <!-- JAVASCRIPT -->
-  
 
     <script>
 const burger = document.getElementById('pmBurger');
@@ -174,7 +179,8 @@ if(isset($_SESSION['panier']) && !empty($_SESSION['panier'])){
  <div class="item">
 
     <img src="../client/produit/images/<?= htmlspecialchars($produit['dossier']) ?>/<?= htmlspecialchars($produit['image']) ?>"
-     alt="<?= htmlspecialchars($produit['nom_produit']) ?>">
+         alt="<?= htmlspecialchars($produit['nom_produit']) ?>"
+         class="item-image">
 
     <div class="item-content">
 
@@ -194,7 +200,7 @@ if(isset($_SESSION['panier']) && !empty($_SESSION['panier'])){
              Supprimer
         </a>
 
-        <a class="order" href="../client/produit/page/electricite/commande.php?id=<?= $id_produit ?>">
+        <a class="order" href="../client/produit/page/<?= htmlspecialchars($produit['dossier']) ?>/commande.php?id=<?= $id_produit ?>">
             Commander
         </a>
 
@@ -210,19 +216,12 @@ if(isset($_SESSION['panier']) && !empty($_SESSION['panier'])){
     echo "<p style='opacity: 0.3; text-align: center; margin-top: 50px; font-size:50px;'>Panier vide</p>";
     echo " <div>
     <i class='fa-solid fa-trash' id='panier-vide' style='font-size:200px;color:#ccc;'></i>
-    </div> " ;
+    </div>" ;
 }
+
+$_SESSION['count'] = $count;
 
 ?>
 
 </body>
 </html>
-
-<?php
-$count = 0;
-
-if(isset($_SESSION['panier'])){
-    $count = array_sum($_SESSION['panier']);
-}
-?>
-
